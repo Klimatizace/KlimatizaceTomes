@@ -1,0 +1,22 @@
+{
+  "BaseTemplate": {
+    "tagline": "Montáž | Servis | Fotovoltaika",
+    "aria_main_nav": "Hlavní navigace",
+    "rights": "Všechna práva vyhrazena.",
+    "made_with": "Klimatizace Tomeš — Váš specialista na komfort."
+  },
+  "RootLayout": {
+    "title": "Klimatizace Tomeš",
+    "description": "Kompletní služby v oblasti klimatizací, tepelných čerpadel a fotovoltaiky.",
+    "home_link": "Domů",
+    "about_link": "O nás",
+    "counter_link": "Statistiky",
+    "portfolio_link": "Reference",
+    "sign_in_link": "Přihlásit se",
+    "sign_up_link": "Registrace"
+  },
+  "Index": {
+    "welcome": "Vítejte u nás!",
+    "intro": "Prodej, servis a montáž klimatizací, tepelných čerpadel a fotovoltaiky."
+  }
+}
