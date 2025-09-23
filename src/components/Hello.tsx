@@ -1,10 +1,20 @@
-import { currentUser } from '@clerk/nextjs/server';
 import { getTranslations } from 'next-intl/server';
+import { Env } from '@/libs/Env';
 import { Sponsors } from './Sponsors';
 
 export const Hello = async () => {
   const t = await getTranslations('Dashboard');
-  const user = await currentUser();
+
+  // Only use Clerk if it's configured
+  let user = null;
+  if (Env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+    try {
+      const { currentUser } = await import('@clerk/nextjs/server');
+      user = await currentUser();
+    } catch (error) {
+      console.warn('Clerk not available:', error);
+    }
+  }
 
   return (
     <>

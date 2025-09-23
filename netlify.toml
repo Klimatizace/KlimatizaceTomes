@@ -2,10 +2,5 @@
 command = "npm run build"
 publish = ".next"
 
-[build.environment]
-CLERK_SECRET_KEY = "sk_test_mock_key_for_build"
-DATABASE_URL = "postgresql://localhost:5432/mockdb"
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_mock_key_for_build"
-
 [[plugins]]
 package = "@netlify/plugin-nextjs"
