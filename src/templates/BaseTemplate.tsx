@@ -20,6 +20,7 @@ export const BaseTemplate = (props: {
   const { phonePrimary, email } = COMPANY_INFO;
   const [isInquiryOpen, setInquiryOpen] = useState(false);
   const [prefillMessage, setPrefillMessage] = useState('');
+  const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
   const openInquiry = useCallback((product?: string) => {
     setPrefillMessage(
@@ -33,6 +34,14 @@ export const BaseTemplate = (props: {
     setPrefillMessage('');
   }, []);
 
+  const closeMobileNav = useCallback(() => {
+    setMobileNavOpen(false);
+  }, []);
+
+  const toggleMobileNav = useCallback(() => {
+    setMobileNavOpen(previous => !previous);
+  }, []);
+
   useEffect(() => {
     const handler: EventListener = (event) => {
       const customDetail = (event as CustomEvent<string | undefined>).detail;
@@ -42,6 +51,45 @@ export const BaseTemplate = (props: {
     window.addEventListener('open-inquiry', handler);
     return () => window.removeEventListener('open-inquiry', handler);
   }, [openInquiry]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        closeMobileNav();
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [closeMobileNav]);
+
+  useEffect(() => {
+    if (!isMobileNavOpen) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMobileNav();
+      }
+    };
+
+    const handleClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('#mobile-navigation a')) {
+        closeMobileNav();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('click', handleClick);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('click', handleClick);
+    };
+  }, [closeMobileNav, isMobileNavOpen]);
 
   const handleInquirySubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -58,54 +106,103 @@ export const BaseTemplate = (props: {
     closeInquiry();
   };
 
-  const renderedActions = props.rightNav ?? (
-    <>
-      <a
-        href={`tel:${phonePrimary.replace(/\s+/g, '')}`}
-        className="inline-flex items-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-5 py-2 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20"
-      >
-        Zavolejte nám
-      </a>
-      <button
-        type="button"
-        onClick={() => openInquiry()}
-        className="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
-      >
-        Nezávazná poptávka
-      </button>
-    </>
-  );
+  const renderMobileMenuIcon = () => {
+    if (isMobileNavOpen) {
+      return (
+        <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M6 18L18 6" />
+        </svg>
+      );
+    }
+
+    return (
+      <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+      </svg>
+    );
+  };
+
+  const renderActions = () => {
+    if (props.rightNav) {
+      return <>{props.rightNav}</>;
+    }
+
+    return (
+      <>
+        <a
+          href={`tel:${phonePrimary.replace(/\s+/g, '')}`}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-5 py-2 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20 lg:w-auto"
+        >
+          Zavolejte nám
+        </a>
+        <button
+          type="button"
+          onClick={() => openInquiry()}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400 lg:w-auto"
+        >
+          Nezávazná poptávka
+        </button>
+      </>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 antialiased">
       <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-6 py-4 md:flex-row md:items-center md:gap-6">
-          <Link href="/" className="flex shrink-0 items-center gap-4 text-left transition-transform hover:scale-[1.02]">
-            <span className="relative h-14 w-14 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-3 shadow-lg shadow-sky-900/20 md:h-16 md:w-16">
-              <Image
-                src="/images/logo-mark.svg"
-                alt={AppConfig.name}
-                fill
-                sizes="(max-width: 768px) 56px, 64px"
-                className="object-contain"
-                priority
-              />
-            </span>
-            <span className="flex flex-col">
-              <span className="text-xl font-semibold tracking-tight text-white md:text-2xl">{AppConfig.name}</span>
-              <span className="text-sm text-slate-300 md:text-base">{t('tagline')}</span>
-            </span>
-          </Link>
+        <div className="mx-auto w-full max-w-7xl px-6 py-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
+            <div className="flex items-center justify-between gap-4 md:w-full md:gap-6">
+              <Link href="/" className="flex shrink-0 items-center gap-4 text-left transition-transform hover:scale-[1.02]">
+                <span className="relative h-14 w-14 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-3 shadow-lg shadow-sky-900/20 md:h-16 md:w-16">
+                  <Image
+                    src="/images/logo-mark.svg"
+                    alt={AppConfig.name}
+                    fill
+                    sizes="(max-width: 768px) 56px, 64px"
+                    className="object-contain"
+                    priority
+                  />
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-xl font-semibold tracking-tight text-white md:text-2xl">{AppConfig.name}</span>
+                  <span className="text-sm text-slate-300 md:text-base">{t('tagline')}</span>
+                </span>
+              </Link>
 
-          <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:gap-6">
-            <nav aria-label={t('aria_main_nav')} className="order-last w-full overflow-x-auto md:order-none md:flex-1 md:overflow-visible">
-              <ul className="flex items-center justify-start gap-3 text-sm font-medium text-slate-200 uppercase tracking-wide whitespace-nowrap md:justify-center">
+              <button
+                type="button"
+                onClick={toggleMobileNav}
+                aria-expanded={isMobileNavOpen}
+                aria-controls="mobile-navigation"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-900/80 text-slate-100 transition hover:border-sky-400 hover:text-sky-100 lg:hidden"
+              >
+                <span className="sr-only">{isMobileNavOpen ? 'Zavřít menu' : 'Otevřít menu'}</span>
+                {renderMobileMenuIcon()}
+              </button>
+
+              <nav aria-label={t('aria_main_nav')} className="hidden flex-1 justify-center pl-2 lg:flex">
+                <ul className="flex items-center justify-center gap-3 text-sm font-medium uppercase tracking-wide text-slate-200">
+                  {props.leftNav}
+                </ul>
+              </nav>
+
+              <div className="hidden shrink-0 items-center gap-3 whitespace-nowrap lg:flex lg:justify-end">{renderActions()}</div>
+            </div>
+          </div>
+
+          {isMobileNavOpen && (
+            <nav
+              id="mobile-navigation"
+              aria-label={t('aria_main_nav')}
+              className="mt-4 rounded-2xl border border-slate-800 bg-slate-950/95 p-4 shadow-lg shadow-slate-950/30 lg:hidden"
+            >
+              <ul className="flex flex-col gap-2 text-sm font-semibold uppercase tracking-[0.14em] text-slate-200">
                 {props.leftNav}
               </ul>
             </nav>
+          )}
 
-            <div className="flex shrink-0 items-center gap-3 whitespace-nowrap md:justify-end">{renderedActions}</div>
-          </div>
+          <div className="mt-4 flex flex-col gap-2 lg:hidden">{renderActions()}</div>
         </div>
       </header>
 

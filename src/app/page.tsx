@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import { CheckIcon } from '@/components/CheckIcon';
-import { BRANDS, COMPANY_INFO, CORE_SERVICES } from '@/data/company';
+import { COMPANY_INFO, CORE_SERVICES } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { PRICING_ITEMS, PRICING_NOTES } from '@/data/pricing';
 import { BaseTemplate } from '@/templates/BaseTemplate';
@@ -13,7 +13,7 @@ export default function HomePage() {
 
   return (
     <BaseTemplate leftNav={buildNavLinks()}>
-      <section id="uvod" className="relative isolate overflow-hidden">
+      <section id="uvod" className="relative isolate scroll-mt-28 overflow-hidden md:scroll-mt-36">
         <Image
           src="/images/hero-locale.jpg"
           alt="Instalovaná klimatizace v moderním interiéru"
@@ -208,22 +208,6 @@ export default function HomePage() {
                 ))}
               </ul>
             </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="znacky" className="border-y border-slate-800 bg-slate-900/70 py-14">
-        <div className="mx-auto max-w-6xl px-6 text-center">
-          <h3 className="text-2xl font-semibold text-white">Dodáváme tyto značky</h3>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            {BRANDS.map(brand => (
-              <span
-                key={brand}
-                className="rounded-full border border-slate-700 bg-slate-950/60 px-5 py-2 text-xs font-semibold tracking-[0.3em] text-slate-200 uppercase"
-              >
-                {brand}
-              </span>
-            ))}
           </div>
         </div>
       </section>

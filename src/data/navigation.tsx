@@ -3,8 +3,7 @@ import Link from 'next/link';
 export const NAV_ITEMS = [
   { href: '/#uvod', label: 'Úvod' },
   { href: '/#sluzby', label: 'Služby' },
-  { href: '/#znacky', label: 'Značky' },
-  { href: '/#vinarske', label: 'Vinařství' },
+  { href: '/cenik#znacky', label: 'Značky' },
   { href: '/cenik', label: 'Ceník' },
   { href: '/#fotovoltaika', label: 'Fotovoltaika' },
   { href: '/#kontakt', label: 'Kontakt' },

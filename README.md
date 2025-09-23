@@ -249,6 +249,8 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_pub_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 ```
 
+For convenience, the starter includes default development values in `.env.development` so `npm run dev` runs without any manual setup. Replace those placeholders with your own keys in `.env.local` before connecting to real services.
+
 Now you have a fully functional authentication system with Next.js, including features such as sign up, sign in, sign out, forgot password, reset password, update profile, update password, update email, delete account, and more.
 
 ### Set up remote database
@@ -257,7 +259,7 @@ The project uses DrizzleORM, a type-safe ORM that is compatible with PostgreSQL,
 
 To set up a remote and production database, you need to create a PostgreSQL database and obtain the connection string. One recommended option is to use [Prisma PostgreSQL](https://www.prisma.io/?via=nextjs-boilerplate), which provides a free PostgreSQL database. This database is compatible and has been tested with Next.js Boilerplate.
 
-After creating your Prisma account, you can get the connection string in the `Connect to your database` section and select the `Any client` tab. Then, you can generate the connection string by clicking the `Generate database credentials` button. Finally, you can copy the connection string and add the `DATABASE_URL` variable to the `.env.local` file.
+After creating your Prisma account, you can get the connection string in the `Connect to your database` section and select the `Any client` tab. Then, you can generate the connection string by clicking the `Generate database credentials` button. Finally, you can copy the connection string and add the `DATABASE_URL` variable to the `.env.local` file. The local PGlite server bundled with the project now listens on port `6543`, so the default development connection string is `postgresql://postgres:postgres@127.0.0.1:6543/postgres`.
 
 ### Translation (i18n) setup
 
@@ -653,3 +655,4 @@ Looking for a custom boilerplate to kick off your project? I'd be glad to discus
 
 [![Sponsor Next JS Boilerplate](https://cdn.buymeacoffee.com/buttons/default-red.png)](https://github.com/sponsors/ixartz)
 # JuraPageV3
+# JuraKlimaFinal
