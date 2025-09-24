@@ -6,10 +6,12 @@ type InquiryButtonProps = {
   children: ReactNode;
   className?: string;
   productName?: string;
+  onOpen?: () => void;
 };
 
-export const InquiryButton = ({ children, className, productName }: InquiryButtonProps) => {
+export const InquiryButton = ({ children, className, productName, onOpen }: InquiryButtonProps) => {
   const handleClick = () => {
+    onOpen?.();
     window.dispatchEvent(
       new CustomEvent('open-inquiry', {
         detail: productName,

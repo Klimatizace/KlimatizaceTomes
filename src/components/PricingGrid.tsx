@@ -184,6 +184,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 <div className="mt-2 flex flex-wrap gap-3">
                   <InquiryButton
                     productName={activeItem.title}
+                    onOpen={closeModal}
                     className="inline-flex items-center justify-center gap-3 rounded-full border border-sky-500/60 bg-sky-500 px-6 py-3 text-base font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
                   >
                     Mám zájem

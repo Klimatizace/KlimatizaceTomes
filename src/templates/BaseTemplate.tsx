@@ -216,8 +216,16 @@ export const BaseTemplate = (props: {
       </footer>
 
       {isInquiryOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur">
-          <div className="relative w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-950 p-8 text-slate-200 shadow-2xl shadow-slate-950/60">
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur"
+          onClick={closeInquiry}
+        >
+          <div
+            className="relative w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-950 p-8 text-slate-200 shadow-2xl shadow-slate-950/60"
+            role="dialog"
+            aria-modal="true"
+            onClick={event => event.stopPropagation()}
+          >
             <button
               type="button"
               onClick={closeInquiry}
