@@ -257,15 +257,19 @@ export const BaseTemplate = (props: {
             </nav>
           )}
 
-          <div
-            className={`mt-4 flex flex-col gap-2 transition-all duration-200 lg:hidden ${
-              isMobileNavOpen || isMobileActionsVisible
-                ? 'translate-y-0 opacity-100 pointer-events-auto'
-                : '-translate-y-4 opacity-0 pointer-events-none'
-            }`}
-            aria-hidden={!(isMobileNavOpen || isMobileActionsVisible)}
-          >
-            {renderActions()}
+          <div className="relative lg:hidden">
+            <div
+              className={`absolute left-0 right-0 transition-all duration-200 ${
+                isMobileNavOpen || isMobileActionsVisible
+                  ? 'translate-y-0 opacity-100 pointer-events-auto'
+                  : '-translate-y-full opacity-0 pointer-events-none'
+              }`}
+              aria-hidden={!(isMobileNavOpen || isMobileActionsVisible)}
+            >
+              <div className="rounded-3xl border border-slate-800 bg-slate-950/90 px-6 py-4 shadow-lg shadow-slate-950/50">
+                <div className="flex flex-col gap-2">{renderActions()}</div>
+              </div>
+            </div>
           </div>
         </div>
       </header>
