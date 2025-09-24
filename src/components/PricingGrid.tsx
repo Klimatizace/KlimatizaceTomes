@@ -1,0 +1,206 @@
+'use client';
+
+import type { PricingDetailId, PricingItem } from '@/data/pricing';
+
+import Image from 'next/image';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import { InquiryButton } from '@/components/InquiryButton';
+import { PRICING_DETAILS } from '@/data/pricing';
+
+const CLOSE_KEYS = new Set(['Escape']);
+
+const buildItemIndex = (items: PricingItem[]) =>
+  items.reduce<Record<PricingDetailId, PricingItem>>((accumulator, current) => {
+    accumulator[current.id] = current;
+    return accumulator;
+  }, {} as Record<PricingDetailId, PricingItem>);
+
+export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
+  const [activeId, setActiveId] = useState<PricingDetailId | null>(null);
+  const itemsById = useMemo(() => buildItemIndex(items), [items]);
+
+  const activeDetail = activeId ? PRICING_DETAILS[activeId] : null;
+  const activeItem = activeId ? itemsById[activeId] : null;
+
+  const closeModal = useCallback(() => {
+    setActiveId(null);
+  }, []);
+
+  const openModal = useCallback((id: PricingDetailId) => {
+    setActiveId(id);
+  }, []);
+
+  useEffect(() => {
+    if (!activeId) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (CLOSE_KEYS.has(event.key)) {
+        event.preventDefault();
+        closeModal();
+      }
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeId, closeModal]);
+
+  return (
+    <>
+      <div className="grid gap-8 md:grid-cols-2">
+        {items.map(item => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => openModal(item.id)}
+            className="group w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 text-left shadow-lg shadow-slate-950/30 transition duration-200 hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-sky-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+          >
+            {item.image && (
+              <div className="relative h-60 w-full overflow-hidden bg-slate-950 md:h-80">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-cover transition duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  priority={false}
+                />
+                {item.badge && (
+                  /* eslint-disable-next-line tailwindcss/classnames-order */
+                  <span className="absolute left-4 top-4 rounded-full border border-sky-500/40 bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100">
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+            )}
+            <div className="space-y-6 p-8">
+              <div className="space-y-3">
+                <h2 className="text-2xl font-semibold text-white">{item.title}</h2>
+                {item.description && (
+                  <p className="text-sm text-slate-300">{item.description}</p>
+                )}
+              </div>
+              <div className="flex items-end gap-3 text-white">
+                {/* eslint-disable-next-line tailwindcss/classnames-order */}
+                <span className="font-bold text-3xl">{item.price}</span>
+                {item.originalPrice && (
+                  <span className="text-sm text-slate-400 line-through">{item.originalPrice}</span>
+                )}
+              </div>
+              <span className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition">
+                Zobrazit detail a popis
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {activeItem && activeDetail && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur">
+          <button
+            type="button"
+            onClick={closeModal}
+            aria-label="Zavřít detail"
+            className="absolute inset-0 h-full w-full cursor-default"
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="relative z-[71] flex w-full max-w-4xl flex-col gap-8 overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 p-6 text-slate-100 shadow-2xl shadow-slate-950/60 md:p-10"
+          >
+            <button
+              type="button"
+              onClick={closeModal}
+              className="absolute top-6 right-6 inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-700 text-slate-200 transition hover:border-sky-400 hover:text-sky-100"
+            >
+              <span className="sr-only">Zavřít okno</span>
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-5 w-5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l8 8m0-8l-8 8" />
+              </svg>
+            </button>
+
+            <div className="grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:items-start">
+              {activeItem.image && (
+                <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 md:h-full">
+                  <Image
+                    src={activeItem.image}
+                    alt={activeItem.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+              )}
+
+              <div className="flex flex-col gap-4">
+                <div className="space-y-2">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-[11px] font-semibold tracking-[0.3em] text-sky-200 uppercase">
+                    {activeDetail.headline}
+                  </span>
+                  <h3 className="text-3xl font-semibold text-white">{activeItem.title}</h3>
+                  <div className="flex flex-wrap items-baseline gap-3 text-white">
+                    <span className="text-2xl font-bold">{activeItem.price}</span>
+                    {activeItem.originalPrice && (
+                      <span className="text-sm text-slate-400 line-through">{activeItem.originalPrice}</span>
+                    )}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-200">{activeDetail.description}</p>
+
+                {activeDetail.features.length > 0 && (
+                  <ul className="grid gap-2 text-sm text-slate-300 md:grid-cols-2">
+                    {activeDetail.features.map(feature => (
+                      <li key={feature} className="flex items-start gap-2">
+                        <span aria-hidden className="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-md border border-sky-500/50 bg-sky-500/10 text-sky-200">
+                          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3 w-3">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.5 8.5l3 3L12.5 5" />
+                          </svg>
+                        </span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {activeDetail.specs && (
+                  <dl className="grid gap-3 text-xs tracking-[0.2em] text-slate-400 uppercase md:grid-cols-2">
+                    {activeDetail.specs.map(spec => (
+                      <div key={`${spec.label}-${spec.value}`}>
+                        <dt>{spec.label}</dt>
+                        <dd className="text-sm tracking-normal text-slate-200 normal-case">{spec.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+
+                <div className="mt-2 flex flex-wrap gap-3">
+                  <InquiryButton
+                    productName={activeItem.title}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
+                  >
+                    Mám zájem
+                  </InquiryButton>
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-700 px-5 py-2 text-sm font-semibold text-slate-200 transition hover:border-sky-400 hover:text-sky-100"
+                  >
+                    Zavřít detail
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};

@@ -1,7 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
-import { InquiryButton } from '@/components/InquiryButton';
+import { PricingGrid } from '@/components/PricingGrid';
 import { BRANDS, COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { PRICING_ITEMS, PRICING_NOTES } from '@/data/pricing';
@@ -47,58 +46,7 @@ export default function PricingPage() {
 
       <section className="bg-slate-950 py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-8 md:grid-cols-2">
-            {PRICING_ITEMS.map(item => (
-              <article
-                key={item.title}
-                className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-slate-950/30"
-              >
-                {item.image && (
-                  <div className="relative h-60 w-full overflow-hidden bg-slate-950 md:h-80">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                      priority={false}
-                    />
-                    {item.badge && (
-                      /* eslint-disable-next-line tailwindcss/classnames-order */
-                      <span className="absolute left-4 top-4 rounded-full border border-sky-500/40 bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100">
-                        {item.badge}
-                      </span>
-                    )}
-                  </div>
-                )}
-                <div className="space-y-6 p-8">
-                  <div className="space-y-3">
-                    <h2 className="text-2xl font-semibold text-white">{item.title}</h2>
-                    {item.description
-                      ? (
-                          <p className="text-sm text-slate-300">{item.description}</p>
-                        )
-                      : null}
-                  </div>
-                  <div className="flex items-end gap-3 text-white">
-                    {/* eslint-disable-next-line tailwindcss/classnames-order */}
-                    <span className="font-bold text-3xl">{item.price}</span>
-                    {item.originalPrice
-                      ? (
-                          <span className="text-sm text-slate-400 line-through">{item.originalPrice}</span>
-                        )
-                      : null}
-                  </div>
-                  <InquiryButton
-                    productName={item.title}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20"
-                  >
-                    Máte zájem? Napište nám
-                  </InquiryButton>
-                </div>
-              </article>
-            ))}
-          </div>
+          <PricingGrid items={PRICING_ITEMS} />
           <p className="mt-12 max-w-3xl text-sm text-slate-400">
             {PRICING_NOTES.summary}
           </p>
