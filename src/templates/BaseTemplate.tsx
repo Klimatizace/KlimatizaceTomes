@@ -217,14 +217,26 @@ export const BaseTemplate = (props: {
 
       {isInquiryOpen && (
         <div
+          role="button"
+          tabIndex={0}
+          aria-label="Zavřít poptávku"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              closeInquiry();
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              closeInquiry();
+            }
+          }}
           className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur"
-          onClick={closeInquiry}
         >
           <div
-            className="relative w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-950 p-8 text-slate-200 shadow-2xl shadow-slate-950/60"
+            className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-950 p-8 text-slate-200 shadow-2xl shadow-slate-950/60"
             role="dialog"
             aria-modal="true"
-            onClick={event => event.stopPropagation()}
           >
             <button
               type="button"
