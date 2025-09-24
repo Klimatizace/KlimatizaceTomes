@@ -266,7 +266,7 @@ export const BaseTemplate = (props: {
               }`}
               aria-hidden={!(isMobileNavOpen || isMobileActionsVisible)}
             >
-              <div className="rounded-3xl border border-slate-800 bg-slate-950/90 px-6 py-4 shadow-lg shadow-slate-950/50">
+              <div className="rounded-3xl border border-slate-800 bg-slate-950/95 px-6 py-4 shadow-lg shadow-slate-950/50 lg:rounded-[2rem]">
                 <div className="flex flex-col gap-2">{renderActions()}</div>
               </div>
             </div>
