@@ -21,6 +21,7 @@ export const BaseTemplate = (props: {
   const [isInquiryOpen, setInquiryOpen] = useState(false);
   const [prefillMessage, setPrefillMessage] = useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+  const [isMobileActionsVisible, setMobileActionsVisible] = useState(true);
 
   const openInquiry = useCallback((product?: string) => {
     setPrefillMessage(
@@ -58,12 +59,66 @@ export const BaseTemplate = (props: {
     const handleChange = (event: MediaQueryListEvent) => {
       if (event.matches) {
         closeMobileNav();
+        setMobileActionsVisible(true);
       }
     };
 
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [closeMobileNav]);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateVisibility = () => {
+      const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+      const currentScrollY = window.scrollY;
+
+      if (isDesktop) {
+        setMobileActionsVisible(true);
+        lastScrollY = currentScrollY;
+        ticking = false;
+        return;
+      }
+
+      const delta = currentScrollY - lastScrollY;
+
+      if (currentScrollY <= 0) {
+        setMobileActionsVisible(true);
+      } else if (Math.abs(delta) > 12) {
+        if (delta > 0 && currentScrollY > 80) {
+          setMobileActionsVisible(false);
+        } else if (delta < 0) {
+          setMobileActionsVisible(true);
+        }
+      }
+
+      lastScrollY = currentScrollY;
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateVisibility);
+        ticking = true;
+      }
+    };
+
+    const handleResize = () => {
+      if (window.matchMedia('(min-width: 1024px)').matches) {
+        setMobileActionsVisible(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isMobileNavOpen) {
@@ -202,7 +257,16 @@ export const BaseTemplate = (props: {
             </nav>
           )}
 
-          <div className="mt-4 flex flex-col gap-2 lg:hidden">{renderActions()}</div>
+          <div
+            className={`mt-4 flex flex-col gap-2 transition-all duration-200 lg:hidden ${
+              isMobileNavOpen || isMobileActionsVisible
+                ? 'translate-y-0 opacity-100 pointer-events-auto'
+                : '-translate-y-4 opacity-0 pointer-events-none'
+            }`}
+            aria-hidden={!(isMobileNavOpen || isMobileActionsVisible)}
+          >
+            {renderActions()}
+          </div>
         </div>
       </header>
 
