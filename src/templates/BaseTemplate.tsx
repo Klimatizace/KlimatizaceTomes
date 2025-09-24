@@ -257,7 +257,7 @@ export const BaseTemplate = (props: {
             </nav>
           )}
 
-          <div className="relative lg:hidden">
+          <div className="relative -mx-6 lg:hidden">
             <div
               className={`absolute left-0 right-0 transition-all duration-200 ${
                 isMobileNavOpen || isMobileActionsVisible
@@ -266,8 +266,8 @@ export const BaseTemplate = (props: {
               }`}
               aria-hidden={!(isMobileNavOpen || isMobileActionsVisible)}
             >
-              <div className="rounded-3xl border border-slate-800 bg-slate-950/95 px-6 py-4 shadow-lg shadow-slate-950/50 lg:rounded-[2rem]">
-                <div className="flex flex-col gap-2">{renderActions()}</div>
+              <div className="rounded-none border-y border-slate-800 bg-slate-950/95 px-6 py-4 shadow-lg shadow-slate-950/50 sm:rounded-3xl">
+                <div className="flex flex-col gap-2 sm:px-2">{renderActions()}</div>
               </div>
             </div>
           </div>
