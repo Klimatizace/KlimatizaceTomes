@@ -104,7 +104,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
       </div>
 
       {activeItem && activeDetail && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 px-4 py-10 backdrop-blur">
           <button
             type="button"
             onClick={closeModal}
@@ -114,7 +114,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
           <div
             role="dialog"
             aria-modal="true"
-            className="relative z-[71] flex w-full max-w-4xl flex-col gap-8 overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 p-6 text-slate-100 shadow-2xl shadow-slate-950/60 md:p-10"
+            className="relative z-[71] flex w-full max-w-5xl flex-col gap-10 overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-950/95 p-6 text-slate-100 shadow-2xl shadow-slate-950/60 md:p-12"
           >
             <button
               type="button"
@@ -127,40 +127,40 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
               </svg>
             </button>
 
-            <div className="grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:items-start">
+            <div className="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-start">
               {activeItem.image && (
-                <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 md:h-full">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900">
                   <Image
                     src={activeItem.image}
                     alt={activeItem.title}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes="(max-width: 1024px) 100vw, 55vw"
                   />
                 </div>
               )}
 
-              <div className="flex flex-col gap-4">
-                <div className="space-y-2">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-[11px] font-semibold tracking-[0.3em] text-sky-200 uppercase">
+              <div className="flex flex-col gap-6">
+                <div className="space-y-3">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1 text-[11px] font-semibold tracking-[0.3em] text-sky-200 uppercase">
                     {activeDetail.headline}
                   </span>
-                  <h3 className="text-3xl font-semibold text-white">{activeItem.title}</h3>
-                  <div className="flex flex-wrap items-baseline gap-3 text-white">
-                    <span className="text-2xl font-bold">{activeItem.price}</span>
+                  <h3 className="text-4xl font-semibold text-white lg:text-[2.75rem]">{activeItem.title}</h3>
+                  <div className="flex flex-wrap items-baseline gap-4 text-white">
+                    <span className="text-3xl font-bold lg:text-[2.2rem]">{activeItem.price}</span>
                     {activeItem.originalPrice && (
-                      <span className="text-sm text-slate-400 line-through">{activeItem.originalPrice}</span>
+                      <span className="text-base text-slate-400 line-through lg:text-lg">{activeItem.originalPrice}</span>
                     )}
                   </div>
                 </div>
-                <p className="text-sm text-slate-200">{activeDetail.description}</p>
+                <p className="text-base text-slate-200 lg:text-lg">{activeDetail.description}</p>
 
                 {activeDetail.features.length > 0 && (
-                  <ul className="grid gap-2 text-sm text-slate-300 md:grid-cols-2">
+                  <ul className="grid gap-3 text-sm text-slate-200 md:grid-cols-2 lg:text-base">
                     {activeDetail.features.map(feature => (
                       <li key={feature} className="flex items-start gap-2">
-                        <span aria-hidden className="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-md border border-sky-500/50 bg-sky-500/10 text-sky-200">
-                          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3 w-3">
+                        <span aria-hidden className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-md border border-sky-500/50 bg-sky-500/10 text-sky-200">
+                          <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3.5 8.5l3 3L12.5 5" />
                           </svg>
                         </span>
@@ -171,11 +171,11 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 )}
 
                 {activeDetail.specs && (
-                  <dl className="grid gap-3 text-xs tracking-[0.2em] text-slate-400 uppercase md:grid-cols-2">
+                  <dl className="grid gap-4 text-xs tracking-[0.25em] text-slate-400 uppercase md:grid-cols-2">
                     {activeDetail.specs.map(spec => (
                       <div key={`${spec.label}-${spec.value}`}>
                         <dt>{spec.label}</dt>
-                        <dd className="text-sm tracking-normal text-slate-200 normal-case">{spec.value}</dd>
+                        <dd className="text-base tracking-normal text-slate-200 normal-case">{spec.value}</dd>
                       </div>
                     ))}
                   </dl>
@@ -184,14 +184,14 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 <div className="mt-2 flex flex-wrap gap-3">
                   <InquiryButton
                     productName={activeItem.title}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
+                    className="inline-flex items-center justify-center gap-3 rounded-full border border-sky-500/60 bg-sky-500 px-6 py-3 text-base font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
                   >
                     Mám zájem
                   </InquiryButton>
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-700 px-5 py-2 text-sm font-semibold text-slate-200 transition hover:border-sky-400 hover:text-sky-100"
+                    className="inline-flex items-center justify-center gap-3 rounded-full border border-slate-700 px-6 py-3 text-base font-semibold text-slate-200 transition hover:border-sky-400 hover:text-sky-100"
                   >
                     Zavřít detail
                   </button>
