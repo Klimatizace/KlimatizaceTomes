@@ -5,11 +5,13 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
+import Script from 'next/script';
 import type { FormEvent, ReactNode } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { COMPANY_INFO } from '@/data/company';
 import { AppConfig } from '@/utils/AppConfig';
+import { getStructuredData } from '@/utils/seo';
 
 export const BaseTemplate = (props: {
   leftNav: ReactNode;
@@ -22,6 +24,7 @@ export const BaseTemplate = (props: {
   const [prefillMessage, setPrefillMessage] = useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isMobileActionsVisible, setMobileActionsVisible] = useState(true);
+  const structuredData = useMemo(() => JSON.stringify(getStructuredData()), []);
 
   const openInquiry = useCallback((product?: string) => {
     setPrefillMessage(
@@ -203,6 +206,9 @@ export const BaseTemplate = (props: {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 antialiased">
+      <Script id="structured-data" type="application/ld+json">
+        {structuredData}
+      </Script>
       <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
         <div className="mx-auto w-full max-w-7xl px-6 py-4">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">

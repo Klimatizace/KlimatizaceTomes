@@ -1,9 +1,11 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { COMPANY_INFO, PHOTOVOLTAIC_CONTENT } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
+import { buildPageMetadata } from '@/utils/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,6 +33,14 @@ const BUNDLE_STEPS = [
   'Montáž panelů, zapojení střídače a uvedení do provozu.',
   'Zaškolení uživatele a napojení na monitoring výroby.',
 ];
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Balkonová fotovoltaika 800 W | Klimatizace Tomeš',
+  description:
+    'Zvýhodněný set balkonové fotovoltaiky 800 W se zapojením na klimatizaci. Kompletní dodávka panelů, střídače a montáže v okrese Hodonín.',
+  path: '/fotovoltaika',
+  keywords: ['balkonová fotovoltaika', 'fotovoltaika hodonín', 'klimatizace fotovoltaika'],
+});
 
 export default function PhotovoltaicsPage() {
   const { phonePrimary, phoneSecondary, email } = COMPANY_INFO;

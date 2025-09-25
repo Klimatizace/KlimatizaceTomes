@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 
 import Link from 'next/link';
@@ -5,6 +6,7 @@ import Link from 'next/link';
 import { COMPANY_INFO, WINE_CELLAR_CONTENT } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
+import { buildPageMetadata } from '@/utils/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +34,14 @@ const IMPLEMENTATION_STEPS = [
       'Zajistíme instalaci, tlakové zkoušky i finální nastavení. Naučíme vás, jak systém správně obsluhovat a kontrolovat.',
   },
 ];
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Úpravy klimatizací pro vinné sklepy | Klimatizace Tomeš',
+  description:
+    'Speciální úpravy klimatizací pro vinné sklepy – stabilní teplota, řízená vlhkost a profesionální servis v celém okrese Hodonín.',
+  path: '/vinarske',
+  keywords: ['klimatizace vinný sklep', 'chlazení vinného sklepa', 'úprava klimatizace víno'],
+});
 
 export default function WineCellarPage() {
   const { phonePrimary, email } = COMPANY_INFO;

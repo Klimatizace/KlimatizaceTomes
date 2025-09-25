@@ -1,6 +1,9 @@
+import type { Metadata } from 'next';
+
 import { COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
+import { buildPageMetadata } from '@/utils/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +13,14 @@ const SERVICE_AREA = [
   'Mikulovsko a Břeclavsko po domluvě',
   'Firemní projekty v rámci Jihomoravského kraje',
 ];
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Kontaktujte nás | Klimatizace Tomeš Hodonín',
+  description:
+    'Telefon, e-mail a servisní linka pro montáž a servis klimatizací v okrese Hodonín. Domluvte si nezávaznou návštěvu technika.',
+  path: '/kontakt',
+  keywords: ['kontakt klimatizace hodonín', 'klimatizace telefon hodonín'],
+});
 
 export default function ContactPage() {
   const { phonePrimary, phoneSecondary, email, regionTagline } = COMPANY_INFO;

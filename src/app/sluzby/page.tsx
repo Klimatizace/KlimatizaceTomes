@@ -1,9 +1,11 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { CheckIcon } from '@/components/CheckIcon';
 import { BRANDS, COMPANY_INFO, CORE_SERVICES } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
+import { buildPageMetadata } from '@/utils/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +31,14 @@ const PROCESS_STEPS = [
       'Zajistíme pravidelný servis, dezinfekci a monitoring výkonu. Díky tomu klimatizace funguje efektivně a úsporně.',
   },
 ];
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Služby montáže a servisu klimatizací | Klimatizace Tomeš',
+  description:
+    'Montáž klimatizací na míru, úpravy pro vinné sklepy, servis autoklimatizací i mobilní servis zemědělských a stavebních strojů. Klimatizace Tomeš pokrývá celý okres Hodonín.',
+  path: '/sluzby',
+  keywords: ['servis klimatizace hodonín', 'údržba klimatizace', 'mobilní servis klimatizace'],
+});
 
 export default function ServicesPage() {
   const { phonePrimary, email } = COMPANY_INFO;

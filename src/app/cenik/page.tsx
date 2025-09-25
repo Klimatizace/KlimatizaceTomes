@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { PricingGrid } from '@/components/PricingGrid';
@@ -5,8 +6,17 @@ import { BRANDS, COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { PRICING_ITEMS, PRICING_NOTES } from '@/data/pricing';
 import { BaseTemplate } from '@/templates/BaseTemplate';
+import { buildPageMetadata } from '@/utils/seo';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Ceník montáže klimatizací a fotovoltaiky | Klimatizace Tomeš',
+  description:
+    'Aktuální ceny montáže klimatizací značek Hisense, Sinclair, Acond, Gree, Vivax, Samsung i balkonové fotovoltaiky. Kompletní dodávka jednotky, materiálu i odborná instalace v okrese Hodonín.',
+  path: '/cenik',
+  keywords: ['ceník montáže klimatizace', 'montáž klimatizace cena', 'klimatizace hodonín ceník'],
+});
 
 export default function PricingPage() {
   const { phonePrimary, email } = COMPANY_INFO;

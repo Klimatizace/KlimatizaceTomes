@@ -1,8 +1,10 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { BRAND_NOTES, BRANDS, COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
+import { buildPageMetadata } from '@/utils/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +25,14 @@ const BRAND_SECTIONS = [
       'Pro sklady, serverovny nebo vinné sklepy vybíráme jednotky s možností rozšířeného řízení teplot a vlhkosti.',
   },
 ];
+
+export const metadata: Metadata = buildPageMetadata({
+  title: 'Značky klimatizací – Hisense, Gree, Samsung a další | Klimatizace Tomeš',
+  description:
+    'Instalujeme klimatizace Hisense, Sinclair, Acond, Gree, Vivax, Samsung a Inventor & Beijer Ref. Pomůžeme vybrat správnou sestavu pro rezidenční i komerční prostory.',
+  path: '/znacky',
+  keywords: ['klimatizace hisense', 'klimatizace gree', 'klimatizace samsung', 'klimatizační značky'],
+});
 
 export default function BrandsPage() {
   const { phonePrimary, email } = COMPANY_INFO;
