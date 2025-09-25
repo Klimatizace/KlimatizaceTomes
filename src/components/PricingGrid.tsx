@@ -114,7 +114,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
           <div
             role="dialog"
             aria-modal="true"
-            className="relative z-[71] flex w-full max-w-5xl flex-col gap-10 overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-950/95 p-6 text-slate-100 shadow-2xl shadow-slate-950/60 md:p-12"
+            className="relative z-[71] flex max-h-[90vh] w-full max-w-5xl flex-col gap-8 overflow-y-auto rounded-3xl border border-slate-800 bg-slate-950/95 p-6 text-slate-100 shadow-2xl shadow-slate-950/60 sm:gap-10 sm:p-8 md:rounded-[2.5rem] md:p-12"
           >
             <button
               type="button"
@@ -127,9 +127,9 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
               </svg>
             </button>
 
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-start">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
               {activeItem.image && (
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 sm:rounded-3xl">
                   <Image
                     src={activeItem.image}
                     alt={activeItem.title}
@@ -140,7 +140,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 </div>
               )}
 
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5 sm:gap-6">
                 <div className="space-y-3">
                   <span className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-4 py-1 text-[11px] font-semibold tracking-[0.3em] text-sky-200 uppercase">
                     {activeDetail.headline}
@@ -181,7 +181,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                   </dl>
                 )}
 
-                <div className="mt-2 flex flex-wrap gap-3">
+                <div className="mt-2 flex flex-wrap gap-3 pb-1">
                   <InquiryButton
                     productName={activeItem.title}
                     onOpen={closeModal}

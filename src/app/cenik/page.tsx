@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { PricingGrid } from '@/components/PricingGrid';
-import { BRANDS, COMPANY_INFO } from '@/data/company';
+import { BRAND_LINKS, BRANDS, COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { PRICING_ITEMS, PRICING_NOTES } from '@/data/pricing';
 import { BaseTemplate } from '@/templates/BaseTemplate';
@@ -48,7 +48,7 @@ export default function PricingPage() {
               href={`mailto:${email}`}
               className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 font-semibold transition hover:border-sky-400 hover:text-sky-200"
             >
-              Napište nám detaile instalace
+              Napište nám detaily instalace
             </a>
           </div>
         </div>
@@ -132,7 +132,12 @@ export default function PricingPage() {
                   <p className="text-sm text-slate-400">
                     Individuální dodávka, montáž i servis včetně originálního příslušenství a prodloužených záruk.
                   </p>
-                  <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.3em] text-sky-300 uppercase">
+                  <a
+                    href={BRAND_LINKS[brand] ?? '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.3em] text-sky-300 uppercase transition hover:text-sky-200"
+                  >
                     Ověřená kvalita
                     <svg
                       aria-hidden="true"
@@ -144,7 +149,7 @@ export default function PricingPage() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.5 8h9m0 0L9 4.5m3.5 3.5L9 11.5" />
                     </svg>
-                  </span>
+                  </a>
                 </div>
               </li>
             ))}

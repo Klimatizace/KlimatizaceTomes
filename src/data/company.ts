@@ -10,10 +10,22 @@ export const BRANDS = [
   'Sinclair',
   'Acond',
   'Gree',
-  'Invertor & Beijer Ref',
+  'Inventor & Beijer Ref',
   'Vivax',
   'Samsung',
 ];
+
+const BRAND_LINK_ENTRIES: Array<[(typeof BRANDS)[number], string]> = [
+  ['Hisense', 'https://cz.hisense.com'],
+  ['Sinclair', 'https://sinclairofficial.com/cs'],
+  ['Acond', 'https://www.acond.cz'],
+  ['Gree', 'https://www.gree.cz'],
+  ['Inventor & Beijer Ref', 'https://www.inventorairconditioner.com'],
+  ['Vivax', 'https://vivax.com'],
+  ['Samsung', 'https://www.samsung.com/cz/'],
+];
+
+export const BRAND_LINKS = Object.fromEntries(BRAND_LINK_ENTRIES) as Record<(typeof BRANDS)[number], string>;
 
 export const BRAND_NOTES = {
   intro:
