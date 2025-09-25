@@ -17,9 +17,9 @@ export const BRANDS = [
 
 const BRAND_LINK_ENTRIES: Array<[(typeof BRANDS)[number], string]> = [
   ['Hisense', 'https://cz.hisense.com'],
-  ['Sinclair', 'https://sinclairofficial.com/cs'],
+  ['Sinclair', 'https://www.sinclair-solutions.com/cs/uvod/'],
   ['Acond', 'https://www.acond.cz'],
-  ['Gree', 'https://www.gree.cz'],
+  ['Gree', 'https://www.greeczech.cz/cz/uvod/'],
   ['Inventor & Beijer Ref', 'https://www.inventorairconditioner.com'],
   ['Vivax', 'https://vivax.com'],
   ['Samsung', 'https://www.samsung.com/cz/'],

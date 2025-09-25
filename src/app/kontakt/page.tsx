@@ -60,7 +60,7 @@ export default function ContactPage() {
               </a>
               <a
                 href={`mailto:${email}`}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 font-semibold transition hover:border-sky-400 hover:text-sky-200"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-4 py-3 text-xs font-semibold text-slate-100 transition hover:border-sky-400 hover:text-sky-200 sm:px-5 sm:text-sm"
               >
                 Napište e-mail
               </a>

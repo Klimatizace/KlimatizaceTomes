@@ -273,27 +273,7 @@ export const BaseTemplate = (props: {
               aria-hidden={!(isMobileNavOpen || isMobileActionsVisible)}
             >
               <div className="rounded-none border-y border-slate-800 bg-slate-950/95 px-6 py-4 shadow-lg shadow-slate-950/50 sm:rounded-3xl">
-                <div className="flex flex-col gap-2 sm:px-2">
-                  <a
-                    href={`tel:${phonePrimary.replace(/\s+/g, '')}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400 whitespace-nowrap"
-                  >
-                    Zavolejte nám
-                  </a>
-                  <a
-                    href={`mailto:${email}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/30 px-5 py-2 text-sm font-semibold text-slate-100 transition hover:border-sky-400 hover:text-sky-100 whitespace-nowrap"
-                  >
-                    Napište e-mail
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => openInquiry()}
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-5 py-2 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20 whitespace-nowrap"
-                  >
-                    Nezávazná poptávka
-                  </button>
-                </div>
+                <div className="flex flex-col gap-2 sm:px-2">{renderActions()}</div>
               </div>
             </div>
           </div>
