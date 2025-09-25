@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { CheckIcon } from '@/components/CheckIcon';
 import { COMPANY_INFO, CORE_SERVICES } from '@/data/company';
@@ -119,8 +120,17 @@ export default function HomePage() {
               </article>
             ))}
           </div>
-          <div className="mt-8 text-center">
-            <a href="#kontakt" className="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/cenik"
+              className="inline-flex items-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-5 py-3 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20"
+            >
+              Ukázat ceník
+            </Link>
+            <a
+              href="#kontakt"
+              className="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
+            >
               Nezávazná nabídka
             </a>
           </div>
