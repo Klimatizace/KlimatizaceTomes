@@ -81,19 +81,8 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 )}
               </div>
             )}
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
             <div className="flex h-full flex-col gap-6 p-8">
               <div className="space-y-3 text-slate-200">
-=======
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-            <div className="space-y-6 p-8">
-              <div className="space-y-3">
->>>>>>> theirs
                 <h2 className="text-2xl font-semibold text-white">{item.title}</h2>
                 {item.description && <p className="text-sm text-slate-300">{item.description}</p>}
               </div>
