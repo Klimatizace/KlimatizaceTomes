@@ -53,51 +53,73 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
     };
   }, [activeId, closeModal]);
 
+  const inquiryButtonClassName = [
+    'inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-transparent px-5 py-2.5 text-sm font-semibold text-sky-100 transition',
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400',
+    'hover:border-sky-400 hover:bg-sky-500/10',
+  ].join(' ');
+
+  const modalInquiryButtonClassName = [
+    'inline-flex items-center justify-center gap-3 rounded-full border border-sky-500/60 bg-sky-500 px-6 py-3 text-base font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition',
+    'hover:bg-sky-400',
+  ].join(' ');
+
   return (
     <>
       <div className="grid gap-8 md:grid-cols-2">
         {items.map(item => (
-          <button
+          <article
             key={item.id}
-            type="button"
-            onClick={() => openModal(item.id)}
-            className="group w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 text-left shadow-lg shadow-slate-950/30 transition duration-200 hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-sky-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+            className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-slate-950/30 transition duration-200 hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-sky-900/40"
           >
-            {item.image && (
-              <div className="relative h-60 w-full overflow-hidden bg-slate-950 md:h-80">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover transition duration-300 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                  priority={false}
-                />
-                {item.badge && (
-                  /* eslint-disable-next-line tailwindcss/classnames-order */
-                  <span className="absolute left-4 top-4 rounded-full border border-sky-500/40 bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100">
-                    {item.badge}
+            <button
+              type="button"
+              onClick={() => openModal(item.id)}
+              className="flex flex-1 flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+            >
+              {item.image && (
+                <div className="relative h-60 w-full overflow-hidden bg-slate-950 md:h-80">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition duration-300 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    priority={false}
+                  />
+                  {item.badge && (
+                    /* eslint-disable-next-line tailwindcss/classnames-order */
+                    <span className="absolute left-4 top-4 rounded-full border border-sky-500/40 bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="flex flex-1 flex-col p-8">
+                <div className="space-y-3 text-slate-200">
+                  <h2 className="text-2xl font-semibold text-white">{item.title}</h2>
+                  {item.description && <p className="text-sm text-slate-300">{item.description}</p>}
+                </div>
+                <div className="mt-auto space-y-4">
+                  <div className="flex items-end gap-3 text-white">
+                    {/* eslint-disable-next-line tailwindcss/classnames-order */}
+                    <span className="font-bold text-3xl">{item.price}</span>
+                    {item.originalPrice && (
+                      <span className="text-sm text-slate-400 line-through">{item.originalPrice}</span>
+                    )}
+                  </div>
+                  <span className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition">
+                    Zobrazit detail a popis
                   </span>
-                )}
+                </div>
               </div>
-            )}
-            <div className="flex h-full flex-col gap-6 p-8">
-              <div className="space-y-3 text-slate-200">
-                <h2 className="text-2xl font-semibold text-white">{item.title}</h2>
-                {item.description && <p className="text-sm text-slate-300">{item.description}</p>}
-              </div>
-              <div className="flex items-end gap-3 text-white">
-                {/* eslint-disable-next-line tailwindcss/classnames-order */}
-                <span className="font-bold text-3xl">{item.price}</span>
-                {item.originalPrice && (
-                  <span className="text-sm text-slate-400 line-through">{item.originalPrice}</span>
-                )}
-              </div>
-              <span className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition">
-                Zobrazit detail a popis
-              </span>
+            </button>
+            <div className="px-8 pt-0 pb-8">
+              <InquiryButton productName={item.title} className={inquiryButtonClassName}>
+                Máte zájem? Napište nám
+              </InquiryButton>
             </div>
-          </button>
+          </article>
         ))}
       </div>
 
@@ -180,11 +202,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 )}
 
                 <div className="mt-2 flex flex-wrap gap-3 pb-1">
-                  <InquiryButton
-                    productName={activeItem.title}
-                    onOpen={closeModal}
-                    className="inline-flex items-center justify-center gap-3 rounded-full border border-sky-500/60 bg-sky-500 px-6 py-3 text-base font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
-                  >
+                  <InquiryButton productName={activeItem.title} onOpen={closeModal} className={modalInquiryButtonClassName}>
                     Mám zájem
                   </InquiryButton>
                   <button

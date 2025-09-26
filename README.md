@@ -656,3 +656,4 @@ Looking for a custom boilerplate to kick off your project? I'd be glad to discus
 [![Sponsor Next JS Boilerplate](https://cdn.buymeacoffee.com/buttons/default-red.png)](https://github.com/sponsors/ixartz)
 # JuraPageV3
 # JuraKlimaFinal
+# JuraKlimaFinalV2
