@@ -81,8 +81,19 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 )}
               </div>
             )}
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
             <div className="flex h-full flex-col gap-6 p-8">
               <div className="space-y-3 text-slate-200">
+=======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+            <div className="space-y-6 p-8">
+              <div className="space-y-3">
+>>>>>>> theirs
                 <h2 className="text-2xl font-semibold text-white">{item.title}</h2>
                 {item.description && <p className="text-sm text-slate-300">{item.description}</p>}
               </div>
@@ -93,7 +104,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                   <span className="text-sm text-slate-400 line-through">{item.originalPrice}</span>
                 )}
               </div>
-              <span className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition">
+              <span className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition">
                 Zobrazit detail a popis
               </span>
             </div>
