@@ -217,14 +217,31 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
 
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
               {activeItem.image && (
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 sm:rounded-3xl">
-                  <Image
-                    src={activeItem.image}
-                    alt={activeItem.title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 55vw"
-                  />
+                <div className="flex flex-col gap-4">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 sm:rounded-3xl">
+                    <Image
+                      src={activeItem.image}
+                      alt={activeItem.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 55vw"
+                    />
+                  </div>
+
+                  {activeDetail.features.length > 0 && (
+                    <ul className="hidden gap-3 border-t border-slate-800/70 pt-4 text-sm text-slate-200 lg:grid lg:text-base">
+                      {activeDetail.features.map(feature => (
+                        <li key={`left-${feature}`} className="flex items-start gap-2">
+                          <span aria-hidden className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-md border border-sky-500/50 bg-sky-500/10 text-sky-200">
+                            <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M3.5 8.5l3 3L12.5 5" />
+                            </svg>
+                          </span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 
@@ -244,7 +261,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
                 <p className="text-base text-slate-200 lg:text-lg">{activeDetail.description}</p>
 
                 {activeDetail.features.length > 0 && (
-                  <ul className="grid gap-3 text-sm text-slate-200 md:grid-cols-2 lg:text-base">
+                  <ul className="grid gap-3 text-sm text-slate-200 md:grid-cols-2 lg:hidden lg:text-base">
                     {activeDetail.features.map(feature => (
                       <li key={feature} className="flex items-start gap-2">
                         <span aria-hidden className="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-md border border-sky-500/50 bg-sky-500/10 text-sky-200">
