@@ -1,5 +1,7 @@
 'use client';
 
+import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from 'react';
+
 import type { PricingDetailId, PricingItem } from '@/data/pricing';
 
 import Image from 'next/image';
@@ -15,6 +17,11 @@ const buildItemIndex = (items: PricingItem[]) =>
     accumulator[current.id] = current;
     return accumulator;
   }, {} as Record<PricingDetailId, PricingItem>);
+
+const INTERACTIVE_SELECTOR = 'button, a, input, textarea, select';
+
+const isInteractiveElement = (target: EventTarget | null) =>
+  target instanceof HTMLElement && Boolean(target.closest(INTERACTIVE_SELECTOR));
 
 export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
   const [activeId, setActiveId] = useState<PricingDetailId | null>(null);
@@ -53,73 +60,134 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
     };
   }, [activeId, closeModal]);
 
+  const buttonBaseClassName = [
+    'inline-flex w-full items-center justify-center gap-2 rounded-full border px-6 py-2.5 text-sm font-semibold text-sky-100 transition duration-200',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950',
+  ].join(' ');
+
+  const detailButtonClassName = [
+    buttonBaseClassName,
+    'border-sky-500/70 bg-sky-500/15 hover:border-sky-400 hover:bg-sky-500/25 shadow-inner shadow-sky-500/20',
+  ].join(' ');
+
   const inquiryButtonClassName = [
-    'inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-transparent px-5 py-2.5 text-sm font-semibold text-sky-100 transition',
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400',
-    'hover:border-sky-400 hover:bg-sky-500/10',
+    buttonBaseClassName,
+    // Match visual weight with the detail button for consistency across cards
+    'border-sky-500/70 bg-sky-500/10 hover:border-sky-400 hover:bg-sky-500/20 shadow-inner shadow-sky-500/20',
   ].join(' ');
 
   const modalInquiryButtonClassName = [
-    'inline-flex items-center justify-center gap-3 rounded-full border border-sky-500/60 bg-sky-500 px-6 py-3 text-base font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition',
-    'hover:bg-sky-400',
+    'inline-flex items-center justify-center gap-3 rounded-full border border-sky-500/60 bg-sky-500 px-6 py-3 text-base font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400',
   ].join(' ');
+  const handleCardClick = useCallback(
+    (id: PricingDetailId) => (event: ReactMouseEvent<HTMLDivElement>) => {
+      if (isInteractiveElement(event.target)) {
+        return;
+      }
+
+      openModal(id);
+    },
+    [openModal],
+  );
+
+  const handleCardKeyDown = useCallback(
+    (id: PricingDetailId) => (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      if (event.key !== 'Enter' && event.key !== ' ') {
+        return;
+      }
+
+      if (isInteractiveElement(event.target)) {
+        return;
+      }
+
+      event.preventDefault();
+      openModal(id);
+    },
+    [openModal],
+  );
 
   return (
     <>
       <div className="grid gap-8 md:grid-cols-2">
         {items.map(item => (
-          <article
+          <div
             key={item.id}
-            className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-slate-950/30 transition duration-200 hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-sky-900/40"
+            onClick={handleCardClick(item.id)}
+            onKeyDown={handleCardKeyDown(item.id)}
+            role="button"
+            tabIndex={0}
+            className="group w-full cursor-pointer overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-slate-950/30 transition duration-200 hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-sky-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
           >
-            <button
-              type="button"
-              onClick={() => openModal(item.id)}
-              className="flex flex-1 flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
-            >
-              {item.image && (
-                <div className="relative h-60 w-full overflow-hidden bg-slate-950 md:h-80">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition duration-300 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                    priority={false}
-                  />
-                  {item.badge && (
-                    /* eslint-disable-next-line tailwindcss/classnames-order */
-                    <span className="absolute left-4 top-4 rounded-full border border-sky-500/40 bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100">
-                      {item.badge}
-                    </span>
+            {item.image && (
+              <div className="relative h-60 w-full overflow-hidden bg-slate-950 md:h-80">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-cover transition duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  priority={false}
+                />
+                {item.badge && (
+                  /* eslint-disable-next-line tailwindcss/classnames-order */
+                  <span className="absolute left-4 top-4 rounded-full border border-sky-500/40 bg-sky-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100">
+                    {item.badge}
+                  </span>
+                )}
+              </div>
+            )}
+            <div className="flex h-full flex-col gap-6 p-8 text-left">
+              {/* Fixed-height content block to align buttons across cards */}
+              <div className="flex min-h-[10.5rem] flex-col justify-start gap-6 md:min-h-[11.5rem]">
+                <div className="space-y-3 text-slate-200">
+                  <h2 className="line-clamp-2 text-2xl font-semibold text-white">{item.title}</h2>
+                  {item.description && <p className="line-clamp-2 text-sm text-slate-300">{item.description}</p>}
+                </div>
+                <div className="flex items-end gap-3 text-white">
+                  {/* eslint-disable-next-line tailwindcss/classnames-order */}
+                  <span className="font-bold text-3xl">{item.price}</span>
+                  {item.originalPrice && (
+                    <span className="text-sm text-slate-400 line-through">{item.originalPrice}</span>
                   )}
                 </div>
-              )}
-              <div className="flex flex-1 flex-col p-8">
-                <div className="space-y-3 text-slate-200">
-                  <h2 className="text-2xl font-semibold text-white">{item.title}</h2>
-                  {item.description && <p className="text-sm text-slate-300">{item.description}</p>}
-                </div>
-                <div className="mt-auto space-y-4">
-                  <div className="flex items-end gap-3 text-white">
-                    {/* eslint-disable-next-line tailwindcss/classnames-order */}
-                    <span className="font-bold text-3xl">{item.price}</span>
-                    {item.originalPrice && (
-                      <span className="text-sm text-slate-400 line-through">{item.originalPrice}</span>
-                    )}
-                  </div>
-                  <span className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-4 py-2 text-sm font-semibold text-sky-100 transition">
-                    Zobrazit detail a popis
-                  </span>
-                </div>
               </div>
-            </button>
-            <div className="px-8 pt-0 pb-8">
-              <InquiryButton productName={item.title} className={inquiryButtonClassName}>
-                Máte zájem? Napište nám
-              </InquiryButton>
+              <div className="mt-6 space-y-3 border-t border-slate-800/70 pt-4">
+                <button
+                  type="button"
+                  onClick={() => openModal(item.id)}
+                  className={detailButtonClassName}
+                >
+                  Zobrazit detail a popis
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    className="h-4 w-4"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 5l6 5-6 5" />
+                  </svg>
+                </button>
+                <InquiryButton
+                  productName={item.title}
+                  className={inquiryButtonClassName}
+                >
+                  Máte zájem? Napište nám
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    className="h-4 w-4"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 5l6 5-6 5" />
+                  </svg>
+                </InquiryButton>
+              </div>
             </div>
-          </article>
+          </div>
         ))}
       </div>
 

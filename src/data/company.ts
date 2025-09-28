@@ -1,7 +1,7 @@
 export const COMPANY_INFO = {
   phonePrimary: '+420 603 873 754',
   phoneSecondary: '+420 704 899 584',
-  email: 'info@klimatizace-tomes.cz',
+  email: 'tomes-klimatizace@seznam.cz',
   regionTagline: 'Jsme tu pro vás – od Horňácka až po poslední kout okresu Hodonín.',
 };
 
