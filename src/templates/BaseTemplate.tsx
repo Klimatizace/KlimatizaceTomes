@@ -149,32 +149,12 @@ export const BaseTemplate = (props: {
     };
   }, [closeMobileNav, isMobileNavOpen]);
 
-  const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-    // Ensure the Netlify form name is present in the payload
-    formData.append('form-name', 'inquiry');
-    // Keep the prefilled message value in sync
-    if (!formData.get('message')) {
-      formData.set('message', prefillMessage);
-    }
-
-    try {
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
-      });
-      form.reset();
+  const handleInquirySubmit = () => {
+    // Allow the browser to submit the form normally so Netlify can capture it.
+    // Close the modal on the next tick to avoid interfering with submission.
+    window.setTimeout(() => {
       closeInquiry();
-      // Optional: Provide lightweight UX feedback without relying on an email client
-      // eslint-disable-next-line no-alert
-      alert('Děkujeme, vaše zpráva byla odeslána. Ozveme se co nejdříve.');
-    } catch {
-      // eslint-disable-next-line no-alert
-      alert('Odeslání se nezdařilo. Zkuste to prosím znovu.');
-    }
+    }, 0);
   };
 
   const renderMobileMenuIcon = () => {
@@ -339,6 +319,7 @@ export const BaseTemplate = (props: {
             <form
               className="mt-6 space-y-4"
               onSubmit={handleInquirySubmit}
+              action="/"
               name="inquiry"
               method="POST"
               data-netlify="true"
@@ -346,6 +327,7 @@ export const BaseTemplate = (props: {
             >
               {/* Netlify form fields */}
               <input type="hidden" name="form-name" value="inquiry" />
+              <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
               <p className="hidden">
                 <label>
                   Don't fill this out if you're human:
@@ -409,6 +391,7 @@ export const BaseTemplate = (props: {
       {/* Hidden static form so Netlify can detect the form at build time */}
       <form name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
         <input type="hidden" name="form-name" value="inquiry" />
+        <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
         <p className="hidden">
           <label>
             Don't fill this out if you're human:
