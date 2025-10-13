@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
-
 import { InquiryButton } from '@/components/InquiryButton';
 import { COMPANY_INFO, PHOTOVOLTAIC_CONTENT } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
