@@ -59,9 +59,9 @@ export default function ContactPage() {
               >
                 Zavolejte nám
               </a>
-            <InquiryButton className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-4 py-3 text-xs font-semibold text-slate-100 transition hover:border-sky-400 hover:text-sky-200 sm:px-5 sm:text-sm">
-              Napište e-mail
-            </InquiryButton>
+              <InquiryButton className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-4 py-3 text-xs font-semibold text-slate-100 transition hover:border-sky-400 hover:text-sky-200 sm:px-5 sm:text-sm">
+                Napište e-mail
+              </InquiryButton>
             </div>
           </div>
           <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-8 text-slate-200 shadow-xl shadow-slate-950/40">
