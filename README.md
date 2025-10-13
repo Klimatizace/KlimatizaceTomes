@@ -657,3 +657,4 @@ Looking for a custom boilerplate to kick off your project? I'd be glad to discus
 # JuraPageV3
 # JuraKlimaFinal
 # JuraKlimaFinalV2
+# KlimatizaceTomes
