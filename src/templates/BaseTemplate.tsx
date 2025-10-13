@@ -19,7 +19,7 @@ export const BaseTemplate = (props: {
   children: ReactNode;
 }) => {
   const t = useTranslations('BaseTemplate');
-  const { phonePrimary, email } = COMPANY_INFO;
+  const { phonePrimary } = COMPANY_INFO;
   const [isInquiryOpen, setInquiryOpen] = useState(false);
   const [prefillMessage, setPrefillMessage] = useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
