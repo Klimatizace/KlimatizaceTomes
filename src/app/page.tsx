@@ -311,12 +311,9 @@ export default function HomePage() {
                   >
                     Zavolejte
                   </a>
-                  <a
-                    href={`mailto:${email}`}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-sky-400 hover:text-sky-200"
-                  >
+                  <InquiryButton className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-sky-400 hover:text-sky-200">
                     Napište e-mail
-                  </a>
+                  </InquiryButton>
                 </div>
               </div>
               <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-6 text-sm text-slate-400">
