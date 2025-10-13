@@ -149,19 +149,32 @@ export const BaseTemplate = (props: {
     };
   }, [closeMobileNav, isMobileNavOpen]);
 
-  const handleInquirySubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const name = formData.get('name')?.toString() ?? '';
-    const contact = formData.get('contact')?.toString() ?? '';
-    const message = prefillMessage || formData.get('message')?.toString() || '';
-    const mailto = `mailto:${email}?subject=${encodeURIComponent('Nezávazná poptávka')}&body=${encodeURIComponent(
-      `Jméno: ${name}\nKontakt: ${contact}\n\nZpráva:\n${message}`,
-    )}`;
-    window.location.href = mailto;
-    form.reset();
-    closeInquiry();
+    // Ensure the Netlify form name is present in the payload
+    formData.append('form-name', 'inquiry');
+    // Keep the prefilled message value in sync
+    if (!formData.get('message')) {
+      formData.set('message', prefillMessage);
+    }
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
+      });
+      form.reset();
+      closeInquiry();
+      // Optional: Provide lightweight UX feedback without relying on an email client
+      // eslint-disable-next-line no-alert
+      alert('Děkujeme, vaše zpráva byla odeslána. Ozveme se co nejdříve.');
+    } catch {
+      // eslint-disable-next-line no-alert
+      alert('Odeslání se nezdařilo. Zkuste to prosím znovu.');
+    }
   };
 
   const renderMobileMenuIcon = () => {
@@ -323,7 +336,21 @@ export const BaseTemplate = (props: {
             <p className="mt-3 text-sm text-slate-300">
               Napište nám základní informace o prostoru a požadované službě. Ozveme se s přesnou nabídkou.
             </p>
-            <form className="mt-6 space-y-4" onSubmit={handleInquirySubmit}>
+            <form
+              className="mt-6 space-y-4"
+              onSubmit={handleInquirySubmit}
+              name="inquiry"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+            >
+              {/* Netlify form fields */}
+              <input type="hidden" name="form-name" value="inquiry" />
+              <p className="hidden">
+                <label>
+                  Don’t fill this out if you’re human: <input name="bot-field" />
+                </label>
+              </p>
               <div>
                 <label className="mb-2 block text-xs text-slate-400 uppercase tracking-[0.35em]" htmlFor="modal-name">
                   Jméno a příjmení
@@ -377,6 +404,18 @@ export const BaseTemplate = (props: {
           </div>
         </div>
       )}
+      {/* Hidden static form so Netlify can detect the form at build time */}
+      <form name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="hidden" name="form-name" value="inquiry" />
+        <p className="hidden">
+          <label>
+            Don’t fill this out if you’re human: <input name="bot-field" />
+          </label>
+        </p>
+        <input type="text" name="name" />
+        <input type="text" name="contact" />
+        <textarea name="message" />
+      </form>
     </div>
   );
 };
