@@ -313,7 +313,7 @@ export const BaseTemplate = (props: {
             }
           }}
           onKeyDown={(event) => {
-            if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+            if (event.key === 'Escape') {
               event.preventDefault();
               closeInquiry();
             }
@@ -348,7 +348,8 @@ export const BaseTemplate = (props: {
               <input type="hidden" name="form-name" value="inquiry" />
               <p className="hidden">
                 <label>
-                  Don’t fill this out if you’re human: <input name="bot-field" />
+                  Don't fill this out if you're human:{' '}
+                  <input name="bot-field" />
                 </label>
               </p>
               <div>
@@ -409,7 +410,8 @@ export const BaseTemplate = (props: {
         <input type="hidden" name="form-name" value="inquiry" />
         <p className="hidden">
           <label>
-            Don’t fill this out if you’re human: <input name="bot-field" />
+            Don't fill this out if you're human:{' '}
+            <input name="bot-field" />
           </label>
         </p>
         <input type="text" name="name" />
