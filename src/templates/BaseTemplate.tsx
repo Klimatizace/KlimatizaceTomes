@@ -348,7 +348,8 @@ export const BaseTemplate = (props: {
               <input type="hidden" name="form-name" value="inquiry" />
               <p className="hidden">
                 <label>
-                  Don't fill this out if you're human:{' '}
+                  Don't fill this out if you're human:
+                  {' '}
                   <input name="bot-field" />
                 </label>
               </p>
@@ -410,7 +411,8 @@ export const BaseTemplate = (props: {
         <input type="hidden" name="form-name" value="inquiry" />
         <p className="hidden">
           <label>
-            Don't fill this out if you're human:{' '}
+            Don't fill this out if you're human:
+            {' '}
             <input name="bot-field" />
           </label>
         </p>
