@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
-import type { ReactNode } from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { COMPANY_INFO } from '@/data/company';
@@ -24,6 +24,7 @@ export const BaseTemplate = (props: {
   const [prefillMessage, setPrefillMessage] = useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isMobileActionsVisible, setMobileActionsVisible] = useState(true);
+  const [submissionState, setSubmissionState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const structuredData = useMemo(() => JSON.stringify(getStructuredData()), []);
 
   const openInquiry = useCallback((product?: string) => {
@@ -149,12 +150,43 @@ export const BaseTemplate = (props: {
     };
   }, [closeMobileNav, isMobileNavOpen]);
 
-  const handleInquirySubmit = () => {
-    // Allow the browser to submit the form normally so Netlify can capture it.
-    // Close the modal on the next tick to avoid interfering with submission.
-    window.setTimeout(() => {
+  const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    if (!formData.get('message')) {
+      formData.set('message', prefillMessage);
+    }
+
+    setSubmissionState('loading');
+
+    try {
+      const encodedData = new URLSearchParams();
+      formData.forEach((value, key) => {
+        if (typeof value === 'string') {
+          encodedData.append(key, value);
+        }
+      });
+
+      await fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: encodedData.toString(),
+      });
+
+      form.reset();
+      setPrefillMessage('');
+      setSubmissionState('success');
       closeInquiry();
-    }, 0);
+      window.setTimeout(() => setSubmissionState('idle'), 2000);
+    } catch (error) {
+      console.error('Netlify form submission failed', error);
+      setSubmissionState('error');
+    }
   };
 
   const renderMobileMenuIcon = () => {
