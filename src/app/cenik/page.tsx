@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { InquiryButton } from '@/components/InquiryButton';
 import { PricingGrid } from '@/components/PricingGrid';
 import { BRAND_LINKS, BRANDS, COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
@@ -44,12 +45,9 @@ export default function PricingPage() {
             >
               Zavolejte pro nabídku
             </a>
-            <a
-              href={`mailto:${email}`}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 font-semibold transition hover:border-sky-400 hover:text-sky-200"
-            >
+            <InquiryButton className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 font-semibold transition hover:border-sky-400 hover:text-sky-200">
               Napište nám detaily instalace
-            </a>
+            </InquiryButton>
           </div>
         </div>
       </section>

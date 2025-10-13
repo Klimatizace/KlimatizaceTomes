@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { CheckIcon } from '@/components/CheckIcon';
+import { InquiryButton } from '@/components/InquiryButton';
 import { COMPANY_INFO, CORE_SERVICES } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { PRICING_ITEMS, PRICING_NOTES } from '@/data/pricing';
@@ -78,12 +79,9 @@ export default function HomePage() {
             >
               Zavolejte nám
             </a>
-            <a
-              href={`mailto:${email}`}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 text-sm font-semibold transition hover:border-sky-400 hover:text-sky-200"
-            >
+            <InquiryButton className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 text-sm font-semibold transition hover:border-sky-400 hover:text-sky-200">
               Napište nám
-            </a>
+            </InquiryButton>
             <span className="text-xs tracking-[0.3em] text-slate-300 uppercase">
               Vaše pohodlí je naše priorita
             </span>

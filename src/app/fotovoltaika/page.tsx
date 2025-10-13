@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { InquiryButton } from '@/components/InquiryButton';
 import { COMPANY_INFO, PHOTOVOLTAIC_CONTENT } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
@@ -141,12 +142,17 @@ export default function PhotovoltaicsPage() {
                 <dd className="text-lg font-semibold">{email}</dd>
               </div>
             </dl>
-            <Link
-              href="/kontakt"
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
-            >
-              Domluvit konzultaci
-            </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href={`tel:${phonePrimary.replace(/\s+/g, '')}`}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
+              >
+                Zavolejte konzultaci
+              </a>
+              <InquiryButton className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 text-sm font-semibold transition hover:border-sky-400 hover:text-sky-200">
+                Napište nám
+              </InquiryButton>
+            </div>
           </div>
         </div>
       </section>

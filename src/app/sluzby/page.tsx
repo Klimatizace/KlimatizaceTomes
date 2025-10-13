@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { CheckIcon } from '@/components/CheckIcon';
+import { InquiryButton } from '@/components/InquiryButton';
 import { BRANDS, COMPANY_INFO, CORE_SERVICES } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
@@ -67,12 +68,9 @@ export default function ServicesPage() {
               >
                 Zavolejte konzultaci
               </a>
-              <a
-                href={`mailto:${email}`}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 font-semibold transition hover:border-sky-400 hover:text-sky-200"
-              >
+              <InquiryButton className="inline-flex items-center gap-2 rounded-full border border-slate-200/30 px-5 py-3 font-semibold transition hover:border-sky-400 hover:text-sky-200">
                 Napište nám detaily projektu
-              </a>
+              </InquiryButton>
             </div>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
