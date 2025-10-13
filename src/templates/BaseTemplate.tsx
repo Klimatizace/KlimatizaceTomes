@@ -24,7 +24,6 @@ export const BaseTemplate = (props: {
   const [prefillMessage, setPrefillMessage] = useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isMobileActionsVisible, setMobileActionsVisible] = useState(true);
-  const [submissionState, setSubmissionState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const structuredData = useMemo(() => JSON.stringify(getStructuredData()), []);
 
   const openInquiry = useCallback((product?: string) => {
@@ -160,8 +159,6 @@ export const BaseTemplate = (props: {
       formData.set('message', prefillMessage);
     }
 
-    setSubmissionState('loading');
-
     try {
       const encodedData = new URLSearchParams();
       formData.forEach((value, key) => {
@@ -180,12 +177,9 @@ export const BaseTemplate = (props: {
 
       form.reset();
       setPrefillMessage('');
-      setSubmissionState('success');
       closeInquiry();
-      window.setTimeout(() => setSubmissionState('idle'), 2000);
     } catch (error) {
       console.error('Netlify form submission failed', error);
-      setSubmissionState('error');
     }
   };
 
