@@ -1,3 +1,7 @@
 [build]
 command = "npm run build"
 publish = ".next"
+
+# Explicitly disable Next.js plugin to avoid Netlify Forms conflicts
+[build.environment]
+NETLIFY_NEXT_PLUGIN_SKIP = "true"
