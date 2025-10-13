@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
+import { InquiryButton } from '@/components/InquiryButton';
 import { BaseTemplate } from '@/templates/BaseTemplate';
 import { buildPageMetadata } from '@/utils/seo';
 
