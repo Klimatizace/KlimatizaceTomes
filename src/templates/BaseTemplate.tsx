@@ -672,12 +672,11 @@ export const BaseTemplate = (props: {
             >
               {/* Netlify form fields */}
               <input type="hidden" name="form-name" value="inquiry" />
-              <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
               <p className="hidden">
                 <label>
                   Don't fill this out if you're human:
                   {' '}
-                  <input name="bot-field" />
+                  <input name="bot-field" type="text" />
                 </label>
               </p>
               <div>
@@ -801,12 +800,11 @@ export const BaseTemplate = (props: {
       {/* Hidden static form so Netlify can detect the form at build time */}
       <form name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
         <input type="hidden" name="form-name" value="inquiry" />
-        <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
         <p className="hidden">
           <label>
             Don't fill this out if you're human:
             {' '}
-            <input name="bot-field" />
+            <input name="bot-field" type="text" />
           </label>
         </p>
         <input type="text" name="name" />
