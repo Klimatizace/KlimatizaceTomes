@@ -76,6 +76,7 @@ export default function PricingPage() {
               <div>
                 <dt className="text-xs tracking-[0.3em] text-slate-400 uppercase">Telefon</dt>
                 <dd className="text-lg font-semibold">{phonePrimary}</dd>
+                <dd className="text-lg font-semibold">{phoneSecondary}</dd>
               </div>
               <div>
                 <dt className="text-xs tracking-[0.3em] text-slate-400 uppercase">E-mail</dt>

@@ -78,9 +78,9 @@ export const WINE_CELLAR_CONTENT = {
 };
 
 export const PHOTOVOLTAIC_CONTENT = {
-  heading: 'Balkonová fotovoltaika 800 W',
+  heading: 'Balkonová fotovoltaika',
   paragraphs: [
-    'Ke každé od nás dodané klimatizaci nabízíme zvýhodněný set balkonové fotovoltaické elektrárny 800 W v ceně 13 500 Kč včetně montáže.',
+    'Ke každé od nás dodané klimatizaci nabízíme zvýhodněný set balkonové fotovoltaické elektrárny včetně montáže.',
     'Spojení klimatizace a fotovoltaiky přináší úspory i nezávislost. Pomůžeme s technickým posouzením, montáží a nastavením, aby se investice rychle vrátila.',
   ],
   features: [
