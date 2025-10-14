@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-
+import * as React from 'react';
 
 import { routing } from '@/libs/I18nRouting';
 import { DEFAULT_SEO } from '@/utils/seo';
