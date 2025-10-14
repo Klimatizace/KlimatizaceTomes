@@ -192,16 +192,19 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
       </div>
 
       {activeItem && activeDetail && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 px-4 py-10 backdrop-blur">
-          <button
-            type="button"
-            onClick={closeModal}
-            aria-label="Zavřít detail"
-            className="absolute inset-0 h-full w-full cursor-default"
-          />
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 px-4 py-10 backdrop-blur"
+          role="presentation"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              closeModal();
+            }
+          }}
+        >
           <div
             role="dialog"
             aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
             className="relative z-[71] flex max-h-[90vh] w-full max-w-5xl flex-col gap-8 overflow-y-auto rounded-3xl border border-slate-800 bg-slate-950/95 p-6 text-slate-100 shadow-2xl shadow-slate-950/60 sm:gap-10 sm:p-8 md:rounded-[2.5rem] md:p-12"
           >
             <button
