@@ -317,14 +317,6 @@ export const BaseTemplate = (props: {
     const messageDraft = (formData.get('message') as string) ?? '';
     lastInquiryDraftRef.current = messageDraft;
 
-    const encodedData = new URLSearchParams();
-    formData.forEach((value, key) => {
-      if (typeof value === 'string') {
-        encodedData.append(key, value);
-      }
-    });
-
-    form.reset();
     setInquirySubmitting(true);
     showConfirmation('pending');
     runInquiryClose();
@@ -334,7 +326,7 @@ export const BaseTemplate = (props: {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: encodedData.toString(),
+      body: new URLSearchParams(formData as any).toString(),
     })
       .then((response) => {
         if (!response.ok) {
@@ -342,6 +334,8 @@ export const BaseTemplate = (props: {
         }
 
         lastInquiryDraftRef.current = '';
+        form.reset();
+        setPrefillMessage('');
         showConfirmation('success');
       })
       .catch((error: unknown) => {
