@@ -546,29 +546,23 @@ export const BaseTemplate = (props: {
       )}
       {isConfirmationVisible && (
         <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="inquiry-confirmation-title"
-          className={`fixed inset-0 z-[65] flex items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm transition-opacity duration-300 ${
+          className={`relative fixed inset-0 z-[65] flex items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm transition-opacity duration-300 ${
             isConfirmationOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
           }`}
-          tabIndex={-1}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              hideConfirmation();
-            }
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') {
-              event.preventDefault();
-              hideConfirmation();
-            }
-          }}
         >
+          <button
+            type="button"
+            aria-label="Zavřít potvrzení"
+            onClick={hideConfirmation}
+            className="absolute inset-0 z-0 h-full w-full cursor-default"
+            tabIndex={-1}
+          />
           <div
-            role="status"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="inquiry-confirmation-title"
             aria-live="polite"
-            className={`relative w-full max-w-md overflow-hidden rounded-3xl border border-sky-500/40 bg-slate-950/95 p-8 text-slate-100 shadow-2xl shadow-sky-500/40 transition-all duration-300 ease-out ${
+            className={`relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-sky-500/40 bg-slate-950/95 p-8 text-slate-100 shadow-2xl shadow-sky-500/40 transition-all duration-300 ease-out ${
               isConfirmationOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-6 scale-95 opacity-0'
             }`}
           >
