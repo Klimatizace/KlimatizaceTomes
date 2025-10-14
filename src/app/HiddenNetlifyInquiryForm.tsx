@@ -1,6 +1,4 @@
-// This hidden form ensures Netlify detects the inquiry form for submissions from JS-rendered modals.
-import * as React from 'react';
-
+// Pure server component: hidden static form so Netlify can parse it at build time
 export default function HiddenNetlifyInquiryForm() {
   return (
     <form name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
