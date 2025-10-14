@@ -251,12 +251,12 @@ export default function HomePage() {
                 Kombinace moderní klimatizace a chytré fotovoltaiky přináší úspory i soběstačnost. Rádi s vámi projdeme
                 možnosti na místě a připravíme řešení na klíč.
               </p>
-              <a
+              <Link
                 href="/cenik"
                 className="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
               >
                 Zobrazit ceník
-              </a>
+              </Link>
             </div>
           </div>
         </div>
