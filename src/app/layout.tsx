@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 
+
 import { routing } from '@/libs/I18nRouting';
 import { DEFAULT_SEO } from '@/utils/seo';
+import HiddenNetlifyInquiryForm from './HiddenNetlifyInquiryForm';
 
 import '@/styles/global.css';
 
@@ -18,7 +20,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang={routing.defaultLocale} className="scroll-smooth">
-      <body>{children}</body>
+      <body>
+        <HiddenNetlifyInquiryForm />
+        {children}
+      </body>
     </html>
   );
 }
