@@ -313,7 +313,7 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
               </div>
             </div>
           </div>
-        </div>
+        </button>
       )}
     </>
   );
