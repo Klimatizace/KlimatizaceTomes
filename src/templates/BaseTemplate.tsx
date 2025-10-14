@@ -28,9 +28,6 @@ export const BaseTemplate = (props: {
   const [isInquiryMounted, setInquiryMounted] = useState(false);
   const [prefillMessage, setPrefillMessage] = useState('');
   const [isInquirySubmitting, setInquirySubmitting] = useState(false);
-  // Anti-spam math field state
-  const [mathAnswer, setMathAnswer] = useState('');
-  const [mathError, setMathError] = useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isMobileActionsVisible, setMobileActionsVisible] = useState(true);
   const inquiryCloseTimerRef = useRef<number | null>(null);
@@ -665,15 +662,7 @@ export const BaseTemplate = (props: {
             </p>
             <form
               className="mt-6 space-y-4"
-              onSubmit={(e) => {
-                if (mathAnswer.trim() !== '6') {
-                  e.preventDefault();
-                  setMathError('Správný výsledek je 6.');
-                  return;
-                }
-                setMathError('');
-                handleInquirySubmit(e);
-              }}
+              onSubmit={handleInquirySubmit}
               action="/"
               name="inquiry"
               method="POST"
@@ -730,25 +719,6 @@ export const BaseTemplate = (props: {
                   className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:border-sky-400 focus:outline-none"
                   placeholder="Popište prostory a požadovanou službu"
                 />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs text-slate-400 uppercase tracking-[0.35em]" htmlFor="modal-math">
-                  Opište výsledek: 4 + 2 = ?
-                </label>
-                <input
-                  id="modal-math"
-                  name="math"
-                  type="text"
-                  autoComplete="off"
-                  required
-                  value={mathAnswer}
-                  onChange={e => setMathAnswer(e.target.value)}
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:border-sky-400 focus:outline-none"
-                  placeholder="Zadejte výsledek"
-                />
-                {mathError && (
-                  <span className="text-xs text-red-500">{mathError}</span>
-                )}
               </div>
               <button
                 type="submit"
