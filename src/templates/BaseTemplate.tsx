@@ -314,37 +314,18 @@ export const BaseTemplate = (props: {
       formData.set('message', prefillMessage);
     }
 
-    const messageDraft = (formData.get('message') as string) ?? '';
-    lastInquiryDraftRef.current = messageDraft;
-
+    // Secure bridge: store data in sessionStorage, set token, redirect to static HTML
+    sessionStorage.setItem('inquiry-bridge-token', '1');
+    sessionStorage.setItem('inquiry-name', formData.get('name') as string || '');
+    sessionStorage.setItem('inquiry-contact', formData.get('contact') as string || '');
+    sessionStorage.setItem('inquiry-message', formData.get('message') as string || '');
+    // Optionally: store return URL
+    sessionStorage.setItem('inquiry-return', window.location.pathname);
+    window.location.href = '/inquiry-form.html';
+    // UI feedback (optional):
     setInquirySubmitting(true);
     showConfirmation('pending');
     runInquiryClose();
-
-    void fetch('/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams(formData as any).toString(),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Netlify form submission failed with status ${response.status}`);
-        }
-
-        lastInquiryDraftRef.current = '';
-        form.reset();
-        setPrefillMessage('');
-        showConfirmation('success');
-      })
-      .catch((error: unknown) => {
-        console.error('Netlify form submission failed', error);
-        showConfirmation('error');
-      })
-      .finally(() => {
-        setInquirySubmitting(false);
-      });
   };
 
   const renderMobileMenuIcon = () => {
