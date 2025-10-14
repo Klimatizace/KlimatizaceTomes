@@ -624,8 +624,8 @@ export const BaseTemplate = (props: {
           onMouseUp={(event) => {
             // zavřít jen pokud mousedown i mouseup byl mimo modal
             if (
-              event.target === event.currentTarget &&
-              (event.currentTarget as any)._shouldClose
+              event.target === event.currentTarget
+              && (event.currentTarget as any)._shouldClose
             ) {
               closeInquiry();
             }
