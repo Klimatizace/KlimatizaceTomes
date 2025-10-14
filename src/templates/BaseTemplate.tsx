@@ -7,11 +7,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Script from 'next/script';
 import type { FormEvent, ReactNode } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { COMPANY_INFO } from '@/data/company';
 import { AppConfig } from '@/utils/AppConfig';
 import { getStructuredData } from '@/utils/seo';
+
+const INQUIRY_TRANSITION_MS = 280;
+const CONFIRMATION_TRANSITION_MS = 240;
+const CONFIRMATION_AUTO_HIDE_MS = 5000;
 
 export const BaseTemplate = (props: {
   leftNav: ReactNode;
@@ -21,22 +25,113 @@ export const BaseTemplate = (props: {
   const t = useTranslations('BaseTemplate');
   const { phonePrimary } = COMPANY_INFO;
   const [isInquiryOpen, setInquiryOpen] = useState(false);
+  const [isInquiryMounted, setInquiryMounted] = useState(false);
   const [prefillMessage, setPrefillMessage] = useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isMobileActionsVisible, setMobileActionsVisible] = useState(true);
+  const inquiryCloseTimerRef = useRef<number | null>(null);
+  const inquiryOpenAnimationRef = useRef<number | null>(null);
+  const [isConfirmationVisible, setConfirmationVisible] = useState(false);
+  const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+  const confirmationAutoHideRef = useRef<number | null>(null);
+  const confirmationCloseTimerRef = useRef<number | null>(null);
+  const confirmationOpenAnimationRef = useRef<number | null>(null);
   const structuredData = useMemo(() => JSON.stringify(getStructuredData()), []);
 
-  const openInquiry = useCallback((product?: string) => {
-    setPrefillMessage(
-      product ? `Dobrý den, mám zájem o ${product}. Prosím o více informací.` : '',
-    );
-    setInquiryOpen(true);
+  const cancelInquiryOpenAnimation = useCallback(() => {
+    if (inquiryOpenAnimationRef.current) {
+      window.cancelAnimationFrame(inquiryOpenAnimationRef.current);
+      inquiryOpenAnimationRef.current = null;
+    }
   }, []);
 
-  const closeInquiry = useCallback(() => {
-    setInquiryOpen(false);
-    setPrefillMessage('');
+  const cancelConfirmationOpenAnimation = useCallback(() => {
+    if (confirmationOpenAnimationRef.current) {
+      window.cancelAnimationFrame(confirmationOpenAnimationRef.current);
+      confirmationOpenAnimationRef.current = null;
+    }
   }, []);
+
+  const clearInquiryCloseTimer = useCallback(() => {
+    if (inquiryCloseTimerRef.current) {
+      window.clearTimeout(inquiryCloseTimerRef.current);
+      inquiryCloseTimerRef.current = null;
+    }
+  }, []);
+
+  const clearConfirmationTimers = useCallback(() => {
+    cancelConfirmationOpenAnimation();
+    if (confirmationAutoHideRef.current) {
+      window.clearTimeout(confirmationAutoHideRef.current);
+      confirmationAutoHideRef.current = null;
+    }
+    if (confirmationCloseTimerRef.current) {
+      window.clearTimeout(confirmationCloseTimerRef.current);
+      confirmationCloseTimerRef.current = null;
+    }
+  }, [cancelConfirmationOpenAnimation]);
+
+  const hideConfirmation = useCallback(() => {
+    const shouldAnimate = isConfirmationVisible;
+    clearConfirmationTimers();
+    setConfirmationOpen(false);
+    if (!shouldAnimate) {
+      setConfirmationVisible(false);
+      return;
+    }
+    confirmationCloseTimerRef.current = window.setTimeout(() => {
+      setConfirmationVisible(false);
+      confirmationCloseTimerRef.current = null;
+    }, CONFIRMATION_TRANSITION_MS);
+  }, [clearConfirmationTimers, isConfirmationVisible]);
+
+  const showConfirmation = useCallback(() => {
+    clearConfirmationTimers();
+    setConfirmationVisible(true);
+    confirmationOpenAnimationRef.current = window.requestAnimationFrame(() => {
+      setConfirmationOpen(true);
+      confirmationOpenAnimationRef.current = null;
+    });
+    confirmationAutoHideRef.current = window.setTimeout(() => {
+      hideConfirmation();
+    }, CONFIRMATION_AUTO_HIDE_MS);
+  }, [clearConfirmationTimers, hideConfirmation]);
+
+  const runInquiryClose = useCallback(
+    (afterClose?: () => void) => {
+      clearInquiryCloseTimer();
+      cancelInquiryOpenAnimation();
+      setInquiryOpen(false);
+      inquiryCloseTimerRef.current = window.setTimeout(() => {
+        setInquiryMounted(false);
+        setPrefillMessage('');
+        inquiryCloseTimerRef.current = null;
+        afterClose?.();
+      }, INQUIRY_TRANSITION_MS);
+    },
+    [cancelInquiryOpenAnimation, clearInquiryCloseTimer],
+  );
+
+  const openInquiry = useCallback(
+    (product?: string) => {
+      clearInquiryCloseTimer();
+      hideConfirmation();
+      setPrefillMessage(
+        product ? `Dobrý den, mám zájem o ${product}. Prosím o více informací.` : '',
+      );
+      setInquiryMounted(true);
+      cancelInquiryOpenAnimation();
+      inquiryOpenAnimationRef.current = window.requestAnimationFrame(() => {
+        setInquiryOpen(true);
+        inquiryOpenAnimationRef.current = null;
+      });
+    },
+    [cancelInquiryOpenAnimation, clearInquiryCloseTimer, hideConfirmation],
+  );
+
+  const closeInquiry = useCallback(() => {
+    runInquiryClose();
+  }, [runInquiryClose]);
 
   const closeMobileNav = useCallback(() => {
     setMobileNavOpen(false);
@@ -55,6 +150,14 @@ export const BaseTemplate = (props: {
     window.addEventListener('open-inquiry', handler);
     return () => window.removeEventListener('open-inquiry', handler);
   }, [openInquiry]);
+
+  useEffect(() => {
+    return () => {
+      clearInquiryCloseTimer();
+      cancelInquiryOpenAnimation();
+      clearConfirmationTimers();
+    };
+  }, [cancelInquiryOpenAnimation, clearConfirmationTimers, clearInquiryCloseTimer]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -176,8 +279,7 @@ export const BaseTemplate = (props: {
       });
 
       form.reset();
-      setPrefillMessage('');
-      closeInquiry();
+      runInquiryClose(showConfirmation);
     } catch (error) {
       console.error('Netlify form submission failed', error);
     }
@@ -308,7 +410,7 @@ export const BaseTemplate = (props: {
         </div>
       </footer>
 
-      {isInquiryOpen && (
+      {isInquiryMounted && (
         <div
           role="button"
           tabIndex={0}
@@ -324,12 +426,17 @@ export const BaseTemplate = (props: {
               closeInquiry();
             }
           }}
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur"
+          className={`fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 px-4 backdrop-blur transition-opacity duration-300 ${
+            isInquiryOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          }`}
         >
           <div
-            className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-950 p-8 text-slate-200 shadow-2xl shadow-slate-950/60"
+            className={`relative w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-950 p-8 text-slate-200 shadow-2xl shadow-slate-950/60 transition-all duration-300 ease-out ${
+              isInquiryOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-[0.98] opacity-0'
+            }`}
             role="dialog"
             aria-modal="true"
+            aria-hidden={!isInquiryOpen}
           >
             <button
               type="button"
@@ -411,6 +518,58 @@ export const BaseTemplate = (props: {
                 Odesláním souhlasíte se zpracováním kontaktních údajů pro účely nabídky.
               </p>
             </form>
+          </div>
+        </div>
+      )}
+      {isConfirmationVisible && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`fixed inset-0 z-[65] flex items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm transition-opacity duration-300 ${
+            isConfirmationOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              hideConfirmation();
+            }
+          }}
+        >
+          <div
+            className={`relative w-full max-w-md overflow-hidden rounded-3xl border border-sky-500/40 bg-slate-950/95 p-8 text-slate-100 shadow-2xl shadow-sky-500/40 transition-all duration-300 ease-out ${
+              isConfirmationOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-6 scale-95 opacity-0'
+            }`}
+          >
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-500 via-cyan-400 to-transparent" />
+            <button
+              type="button"
+              onClick={hideConfirmation}
+              className="absolute top-4 right-4 rounded-full border border-slate-700 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-300 transition hover:border-sky-400 hover:text-sky-200"
+            >
+              Zavřít
+            </button>
+            <div className="flex flex-col items-center gap-5 text-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-sky-500/15 text-sky-300 shadow-inner shadow-sky-500/30">
+                <svg
+                  aria-hidden="true"
+                  className="h-7 w-7"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold text-white">Děkujeme za zprávu</h3>
+                <p className="text-sm text-slate-300">
+                  Potvrdili jsme přijetí vašeho e-mailu. Ozveme se s reakcí co nejdříve.
+                </p>
+              </div>
+              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Okno se zavře automaticky
+              </div>
+            </div>
           </div>
         </div>
       )}
