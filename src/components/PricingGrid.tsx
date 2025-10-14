@@ -192,12 +192,21 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
       </div>
 
       {activeItem && activeDetail && (
-        <div
+        <button
+          type="button"
+          aria-label="Zavřít detail"
           className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-950/80 px-4 py-10 backdrop-blur"
-          role="presentation"
           onClick={(event) => {
-            if (event.target === event.currentTarget) {
+            if (event.target === event.currentTarget || event.currentTarget === event.target) {
               closeModal();
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              if (event.target === event.currentTarget) {
+                closeModal();
+              }
             }
           }}
         >
