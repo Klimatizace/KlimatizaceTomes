@@ -36,6 +36,7 @@ export const BaseTemplate = (props: {
   const confirmationAutoHideRef = useRef<number | null>(null);
   const confirmationCloseTimerRef = useRef<number | null>(null);
   const confirmationOpenAnimationRef = useRef<number | null>(null);
+  const confirmationCloseButtonRef = useRef<HTMLButtonElement | null>(null);
   const structuredData = useMemo(() => JSON.stringify(getStructuredData()), []);
 
   const cancelInquiryOpenAnimation = useCallback(() => {
@@ -158,6 +159,28 @@ export const BaseTemplate = (props: {
       clearConfirmationTimers();
     };
   }, [cancelInquiryOpenAnimation, clearConfirmationTimers, clearInquiryCloseTimer]);
+
+  useEffect(() => {
+    if (!isConfirmationVisible) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        hideConfirmation();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hideConfirmation, isConfirmationVisible]);
+
+  useEffect(() => {
+    if (isConfirmationVisible) {
+      confirmationCloseButtonRef.current?.focus();
+    }
+  }, [isConfirmationVisible]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -523,18 +546,28 @@ export const BaseTemplate = (props: {
       )}
       {isConfirmationVisible && (
         <div
-          role="status"
-          aria-live="polite"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="inquiry-confirmation-title"
           className={`fixed inset-0 z-[65] flex items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm transition-opacity duration-300 ${
             isConfirmationOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
           }`}
+          tabIndex={-1}
           onClick={(event) => {
             if (event.target === event.currentTarget) {
               hideConfirmation();
             }
           }}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+              hideConfirmation();
+            }
+          }}
         >
           <div
+            role="status"
+            aria-live="polite"
             className={`relative w-full max-w-md overflow-hidden rounded-3xl border border-sky-500/40 bg-slate-950/95 p-8 text-slate-100 shadow-2xl shadow-sky-500/40 transition-all duration-300 ease-out ${
               isConfirmationOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-6 scale-95 opacity-0'
             }`}
@@ -543,6 +576,7 @@ export const BaseTemplate = (props: {
             <button
               type="button"
               onClick={hideConfirmation}
+              ref={confirmationCloseButtonRef}
               className="absolute top-4 right-4 rounded-full border border-slate-700 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-300 transition hover:border-sky-400 hover:text-sky-200"
             >
               Zavřít
@@ -561,7 +595,7 @@ export const BaseTemplate = (props: {
                 </svg>
               </span>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold text-white">Děkujeme za zprávu</h3>
+                <h3 id="inquiry-confirmation-title" className="text-xl font-semibold text-white">Děkujeme za zprávu</h3>
                 <p className="text-sm text-slate-300">
                   Potvrdili jsme přijetí vašeho e-mailu. Ozveme se s reakcí co nejdříve.
                 </p>

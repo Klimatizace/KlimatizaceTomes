@@ -1,5 +1,5 @@
 [build]
-command = "next build"
+racommand = "next build"
 publish = ".next"
 
 [[plugins]]
