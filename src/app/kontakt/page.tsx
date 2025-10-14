@@ -76,53 +76,21 @@ export default function ContactPage() {
               Zašlete nám pár informací o prostoru – typ budovy, velikost místností a preferovaný termín instalace. Připravíme
               kalkulaci a navrhneme další postup.
             </p>
-            <form className="mt-6 space-y-4 text-sm">
-              <div>
-                <label className="mb-2 block text-xs tracking-[0.35em] text-slate-400 uppercase" htmlFor="name">
-                  Jméno a příjmení
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:border-sky-400 focus:outline-none"
-                  placeholder="Jan Novák"
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs tracking-[0.35em] text-slate-400 uppercase" htmlFor="contact">
-                  Telefon nebo e-mail
-                </label>
-                <input
-                  id="contact"
-                  name="contact"
-                  type="text"
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:border-sky-400 focus:outline-none"
-                  placeholder="Váš kontakt"
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs tracking-[0.35em] text-slate-400 uppercase" htmlFor="message">
-                  Zpráva
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 focus:border-sky-400 focus:outline-none"
-                  placeholder="Popište prostory a požadovanou službu"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded-full bg-sky-500 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
-              >
-                Odeslat poptávku
-              </button>
-              <p className="text-xs text-slate-400">
-                Odesláním souhlasíte se zpracováním osobních údajů pro účely nezávazné nabídky.
-              </p>
-            </form>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  const event = new CustomEvent('openInquiryModal');
+                  window.dispatchEvent(event);
+                }
+              }}
+              className="w-full rounded-full bg-sky-500 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
+            >
+              Odeslat poptávku
+            </button>
+            <p className="text-xs text-slate-400">
+              Odesláním souhlasíte se zpracováním osobních údajů pro účely nezávazné nabídky.
+            </p>
           </div>
         </div>
       </section>
