@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { InquiryButton } from '@/components/InquiryButton';
+import { OpenInquiryModalButton } from '@/components/OpenInquiryModalButton';
 import { COMPANY_INFO } from '@/data/company';
 import { buildNavLinks } from '@/data/navigation';
 import { BaseTemplate } from '@/templates/BaseTemplate';
@@ -76,18 +77,9 @@ export default function ContactPage() {
               Zašlete nám pár informací o prostoru – typ budovy, velikost místností a preferovaný termín instalace. Připravíme
               kalkulaci a navrhneme další postup.
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  const event = new CustomEvent('openInquiryModal');
-                  window.dispatchEvent(event);
-                }
-              }}
-              className="w-full rounded-full bg-sky-500 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
-            >
+            <OpenInquiryModalButton className="w-full rounded-full bg-sky-500 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400">
               Odeslat poptávku
-            </button>
+            </OpenInquiryModalButton>
             <p className="text-xs text-slate-400">
               Odesláním souhlasíte se zpracováním osobních údajů pro účely nezávazné nabídky.
             </p>
