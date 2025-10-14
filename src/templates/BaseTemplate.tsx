@@ -27,17 +27,20 @@ export const BaseTemplate = (props: {
   const [isInquiryOpen, setInquiryOpen] = useState(false);
   const [isInquiryMounted, setInquiryMounted] = useState(false);
   const [prefillMessage, setPrefillMessage] = useState('');
+  const [isInquirySubmitting, setInquirySubmitting] = useState(false);
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [isMobileActionsVisible, setMobileActionsVisible] = useState(true);
   const inquiryCloseTimerRef = useRef<number | null>(null);
   const inquiryOpenAnimationRef = useRef<number | null>(null);
   const [isConfirmationVisible, setConfirmationVisible] = useState(false);
   const [isConfirmationOpen, setConfirmationOpen] = useState(false);
+  const [confirmationVariant, setConfirmationVariant] = useState<'success' | 'error' | 'pending'>('success');
   const confirmationAutoHideRef = useRef<number | null>(null);
   const confirmationCloseTimerRef = useRef<number | null>(null);
   const confirmationOpenAnimationRef = useRef<number | null>(null);
   const confirmationCloseButtonRef = useRef<HTMLButtonElement | null>(null);
   const confirmationCardRef = useRef<HTMLDivElement | null>(null);
+  const lastInquiryDraftRef = useRef('');
   const structuredData = useMemo(() => JSON.stringify(getStructuredData()), []);
 
   const cancelInquiryOpenAnimation = useCallback(() => {
@@ -87,17 +90,23 @@ export const BaseTemplate = (props: {
     }, CONFIRMATION_TRANSITION_MS);
   }, [clearConfirmationTimers, isConfirmationVisible]);
 
-  const showConfirmation = useCallback(() => {
-    clearConfirmationTimers();
-    setConfirmationVisible(true);
-    confirmationOpenAnimationRef.current = window.requestAnimationFrame(() => {
-      setConfirmationOpen(true);
-      confirmationOpenAnimationRef.current = null;
-    });
-    confirmationAutoHideRef.current = window.setTimeout(() => {
-      hideConfirmation();
-    }, CONFIRMATION_AUTO_HIDE_MS);
-  }, [clearConfirmationTimers, hideConfirmation]);
+  const showConfirmation = useCallback(
+    (variant: 'success' | 'error' | 'pending') => {
+      clearConfirmationTimers();
+      setConfirmationVariant(variant);
+      setConfirmationVisible(true);
+      confirmationOpenAnimationRef.current = window.requestAnimationFrame(() => {
+        setConfirmationOpen(true);
+        confirmationOpenAnimationRef.current = null;
+      });
+      if (variant === 'success') {
+        confirmationAutoHideRef.current = window.setTimeout(() => {
+          hideConfirmation();
+        }, CONFIRMATION_AUTO_HIDE_MS);
+      }
+    },
+    [clearConfirmationTimers, hideConfirmation],
+  );
 
   const runInquiryClose = useCallback(
     (afterClose?: () => void) => {
@@ -115,12 +124,11 @@ export const BaseTemplate = (props: {
   );
 
   const openInquiry = useCallback(
-    (product?: string) => {
+    (product?: string, prefillOverride?: string) => {
       clearInquiryCloseTimer();
       hideConfirmation();
-      setPrefillMessage(
-        product ? `Dobrý den, mám zájem o ${product}. Prosím o více informací.` : '',
-      );
+      const message = prefillOverride ?? (product ? `Dobrý den, mám zájem o ${product}. Prosím o více informací.` : '');
+      setPrefillMessage(message);
       setInquiryMounted(true);
       cancelInquiryOpenAnimation();
       inquiryOpenAnimationRef.current = window.requestAnimationFrame(() => {
@@ -134,6 +142,12 @@ export const BaseTemplate = (props: {
   const closeInquiry = useCallback(() => {
     runInquiryClose();
   }, [runInquiryClose]);
+
+  const handleInquiryRetry = useCallback(() => {
+    const draft = lastInquiryDraftRef.current;
+    hideConfirmation();
+    openInquiry(undefined, draft);
+  }, [hideConfirmation, openInquiry]);
 
   const closeMobileNav = useCallback(() => {
     setMobileNavOpen(false);
@@ -188,10 +202,10 @@ export const BaseTemplate = (props: {
   }, [hideConfirmation, isConfirmationVisible]);
 
   useEffect(() => {
-    if (isConfirmationVisible) {
+    if (isConfirmationVisible && confirmationVariant === 'error') {
       confirmationCloseButtonRef.current?.focus();
     }
-  }, [isConfirmationVisible]);
+  }, [confirmationVariant, isConfirmationVisible]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -286,8 +300,12 @@ export const BaseTemplate = (props: {
     };
   }, [closeMobileNav, isMobileNavOpen]);
 
-  const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleInquirySubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (isInquirySubmitting) {
+      return;
+    }
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -296,27 +314,43 @@ export const BaseTemplate = (props: {
       formData.set('message', prefillMessage);
     }
 
-    try {
-      const encodedData = new URLSearchParams();
-      formData.forEach((value, key) => {
-        if (typeof value === 'string') {
-          encodedData.append(key, value);
+    const messageDraft = (formData.get('message') as string) ?? '';
+    lastInquiryDraftRef.current = messageDraft;
+
+    const encodedData = new URLSearchParams();
+    formData.forEach((value, key) => {
+      if (typeof value === 'string') {
+        encodedData.append(key, value);
+      }
+    });
+
+    form.reset();
+    setInquirySubmitting(true);
+    showConfirmation('pending');
+    runInquiryClose();
+
+    void fetch('/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: encodedData.toString(),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Netlify form submission failed with status ${response.status}`);
         }
-      });
 
-      await fetch('/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: encodedData.toString(),
+        lastInquiryDraftRef.current = '';
+        showConfirmation('success');
+      })
+      .catch((error: unknown) => {
+        console.error('Netlify form submission failed', error);
+        showConfirmation('error');
+      })
+      .finally(() => {
+        setInquirySubmitting(false);
       });
-
-      form.reset();
-      runInquiryClose(showConfirmation);
-    } catch (error) {
-      console.error('Netlify form submission failed', error);
-    }
   };
 
   const renderMobileMenuIcon = () => {
@@ -358,6 +392,9 @@ export const BaseTemplate = (props: {
       </>
     );
   };
+
+  const isConfirmationError = confirmationVariant === 'error';
+  const isConfirmationPending = confirmationVariant === 'pending';
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 antialiased">
@@ -491,6 +528,7 @@ export const BaseTemplate = (props: {
               method="POST"
               data-netlify="true"
               netlify-honeypot="bot-field"
+              aria-busy={isInquirySubmitting}
             >
               {/* Netlify form fields */}
               <input type="hidden" name="form-name" value="inquiry" />
@@ -544,9 +582,34 @@ export const BaseTemplate = (props: {
               </div>
               <button
                 type="submit"
-                className="w-full rounded-full bg-sky-500 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
+                disabled={isInquirySubmitting}
+                className={`w-full rounded-full px-5 py-3 font-semibold text-slate-950 shadow-lg transition ${
+                  isInquirySubmitting
+                    ? 'cursor-progress bg-sky-500/80 shadow-sky-500/20'
+                    : 'bg-sky-500 shadow-sky-500/30 hover:bg-sky-400'
+                }`}
               >
-                Odeslat e-mailem
+                {isInquirySubmitting ? (
+                  <span className="inline-flex items-center justify-center gap-2 text-slate-900/90">
+                    <svg
+                      aria-hidden="true"
+                      className="h-4 w-4 animate-spin text-slate-900/80"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4v2m0 12v2m8-8h-2M6 12H4m12.364-6.364l-1.414 1.414M8.05 15.95l-1.414 1.414m0-10.728l1.414 1.414m7.9 7.9l1.414 1.414"
+                      />
+                    </svg>
+                    Odesíláme...
+                  </span>
+                ) : (
+                  'Odeslat e-mailem'
+                )}
               </button>
               <p className="text-xs text-slate-500">
                 Odesláním souhlasíte se zpracováním kontaktních údajů pro účely nabídky.
@@ -560,14 +623,28 @@ export const BaseTemplate = (props: {
           className={`pointer-events-none fixed inset-x-0 bottom-6 z-[65] flex justify-center px-4 transition-all duration-300 ${
             isConfirmationOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}
-          aria-live="polite"
+          aria-live={isConfirmationError ? 'assertive' : 'polite'}
         >
           <div
             ref={confirmationCardRef}
-            role="status"
-            className="pointer-events-auto relative flex w-full max-w-md flex-col items-center gap-5 overflow-hidden rounded-3xl border border-sky-500/40 bg-slate-950/95 p-8 text-slate-100 shadow-2xl shadow-sky-500/40"
+            role={isConfirmationError ? 'alert' : 'status'}
+            className={`pointer-events-auto relative flex w-full max-w-md flex-col items-center gap-5 overflow-hidden rounded-3xl border ${
+              isConfirmationError
+                ? 'border-rose-500/40 shadow-rose-500/40'
+                : isConfirmationPending
+                  ? 'border-sky-400/30 shadow-sky-400/20'
+                  : 'border-sky-500/40 shadow-sky-500/40'
+            } bg-slate-950/95 p-8 text-slate-100 shadow-2xl`}
           >
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-500 via-cyan-400 to-transparent" />
+            <div
+              className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${
+                isConfirmationError
+                  ? 'from-rose-500 via-orange-400 to-transparent'
+                  : isConfirmationPending
+                    ? 'from-sky-400 via-cyan-300 to-transparent'
+                    : 'from-sky-500 via-cyan-400 to-transparent'
+              }`}
+            />
             <button
               type="button"
               onClick={hideConfirmation}
@@ -577,27 +654,85 @@ export const BaseTemplate = (props: {
               Zavřít
             </button>
             <div className="flex flex-col items-center gap-5 text-center">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-sky-500/15 text-sky-300 shadow-inner shadow-sky-500/30">
-                <svg
-                  aria-hidden="true"
-                  className="h-7 w-7"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
+              <span
+                className={`flex h-14 w-14 items-center justify-center rounded-full shadow-inner ${
+                  isConfirmationError
+                    ? 'bg-rose-500/15 text-rose-300 shadow-rose-500/30'
+                    : isConfirmationPending
+                      ? 'bg-sky-500/10 text-sky-200 shadow-sky-500/20'
+                      : 'bg-sky-500/15 text-sky-300 shadow-sky-500/30'
+                }`}
+              >
+                {isConfirmationError ? (
+                  <svg
+                    aria-hidden="true"
+                    className="h-7 w-7"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ) : isConfirmationPending ? (
+                  <svg
+                    aria-hidden="true"
+                    className="h-7 w-7 animate-spin"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <circle className="opacity-20" cx="12" cy="12" r="9" fill="none" />
+                    <path className="opacity-70" strokeLinecap="round" d="M21 12a9 9 0 00-9-9" />
+                  </svg>
+                ) : (
+                  <svg
+                    aria-hidden="true"
+                    className="h-7 w-7"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
               </span>
               <div className="space-y-2">
-                <h3 id="inquiry-confirmation-title" className="text-xl font-semibold text-white">Děkujeme za zprávu</h3>
+                <h3 id="inquiry-confirmation-title" className="text-xl font-semibold text-white">
+                  {isConfirmationError ? 'Odeslání se nepodařilo' : isConfirmationPending ? 'Odesíláme zprávu' : 'Děkujeme za zprávu'}
+                </h3>
                 <p className="text-sm text-slate-300">
-                  Potvrdili jsme přijetí vašeho e-mailu. Ozveme se s reakcí co nejdříve.
+                  {isConfirmationError
+                    ? 'Zkontrolujte připojení a zkuste odeslat formulář znovu.'
+                    : isConfirmationPending
+                      ? 'Chvilku prosíme, odesíláme váš e-mail na náš server.'
+                      : 'Potvrdili jsme přijetí vašeho e-mailu. Ozveme se s reakcí co nejdříve.'}
                 </p>
               </div>
-              <div className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
-                Okno se zavře automaticky
-              </div>
+              {isConfirmationError ? (
+                <div className="flex w-full flex-col items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={handleInquiryRetry}
+                    className="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
+                  >
+                    Zkusit znovu
+                  </button>
+                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                    Nebo formulář zavřete
+                  </span>
+                </div>
+              ) : isConfirmationPending ? (
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                  Probíhá odesílání
+                </div>
+              ) : (
+                <div className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                  Okno se zavře automaticky
+                </div>
+              )}
             </div>
           </div>
         </div>
