@@ -252,10 +252,10 @@ export default function HomePage() {
                 možnosti na místě a připravíme řešení na klíč.
               </p>
               <a
-                href={`tel:${phoneSecondary.replace(/\s+/g, '')}`}
-                className="inline-flex items-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-5 py-2 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20"
+                href="/cenik"
+                className="inline-flex items-center gap-2 rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/30 transition hover:bg-sky-400"
               >
-                {`Tel. ${phoneSecondary}`}
+                Zobrazit ceník
               </a>
             </div>
           </div>
