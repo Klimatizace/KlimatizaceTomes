@@ -613,10 +613,23 @@ export const BaseTemplate = (props: {
           role="button"
           tabIndex={0}
           aria-label="Zavřít poptávku"
-          onClick={(event) => {
+          onMouseDown={(event) => {
+            // označíme, že mousedown byl mimo modal
             if (event.target === event.currentTarget) {
+              (event.currentTarget as any)._shouldClose = true;
+            } else {
+              (event.currentTarget as any)._shouldClose = false;
+            }
+          }}
+          onMouseUp={(event) => {
+            // zavřít jen pokud mousedown i mouseup byl mimo modal
+            if (
+              event.target === event.currentTarget &&
+              (event.currentTarget as any)._shouldClose
+            ) {
               closeInquiry();
             }
+            (event.currentTarget as any)._shouldClose = false;
           }}
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
