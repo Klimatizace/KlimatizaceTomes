@@ -18,7 +18,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function PricingPage() {
-  const { phonePrimary, email } = COMPANY_INFO;
+  const { phonePrimary, phoneSecondary, email } = COMPANY_INFO;
 
   return (
     <BaseTemplate leftNav={buildNavLinks()}>
