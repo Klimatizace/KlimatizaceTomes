@@ -1,0 +1,15 @@
+@layer theme, base, clerk, components, utilities; /* Ensure Clerk is compatible with Tailwind CSS v4 */
+
+@import 'tailwindcss';
+
+@layer components {
+  .glass {
+    background: color-mix(in oklab, rgba(255, 255, 255, 0.06), transparent 40%);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    backdrop-filter: saturate(140%) blur(10px);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
