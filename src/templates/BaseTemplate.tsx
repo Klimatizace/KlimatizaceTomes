@@ -666,11 +666,11 @@ export const BaseTemplate = (props: {
             >
               {/* Netlify form fields */}
               <input type="hidden" name="form-name" value="inquiry" />
-              <p className="hidden">
+              <p className="hidden" aria-hidden="true">
                 <label>
                   Don't fill this out if you're human:
                   {' '}
-                  <input name="bot-field" type="text" />
+                  <input name="bot-field" type="text" autoComplete="off" tabIndex={-1} />
                 </label>
               </p>
               <div>
