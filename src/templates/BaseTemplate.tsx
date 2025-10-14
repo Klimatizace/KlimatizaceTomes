@@ -37,6 +37,7 @@ export const BaseTemplate = (props: {
   const confirmationCloseTimerRef = useRef<number | null>(null);
   const confirmationOpenAnimationRef = useRef<number | null>(null);
   const confirmationCloseButtonRef = useRef<HTMLButtonElement | null>(null);
+  const confirmationCardRef = useRef<HTMLDivElement | null>(null);
   const structuredData = useMemo(() => JSON.stringify(getStructuredData()), []);
 
   const cancelInquiryOpenAnimation = useCallback(() => {
@@ -172,8 +173,18 @@ export const BaseTemplate = (props: {
       }
     };
 
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!confirmationCardRef.current?.contains(event.target as Node)) {
+        hideConfirmation();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousedown', handlePointerDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousedown', handlePointerDown);
+    };
   }, [hideConfirmation, isConfirmationVisible]);
 
   useEffect(() => {
@@ -546,25 +557,15 @@ export const BaseTemplate = (props: {
       )}
       {isConfirmationVisible && (
         <div
-          className={`relative fixed inset-0 z-[65] flex items-center justify-center bg-slate-950/70 px-4 backdrop-blur-sm transition-opacity duration-300 ${
-            isConfirmationOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          className={`pointer-events-none fixed inset-x-0 bottom-6 z-[65] flex justify-center px-4 transition-all duration-300 ${
+            isConfirmationOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}
+          aria-live="polite"
         >
-          <button
-            type="button"
-            aria-label="Zavřít potvrzení"
-            onClick={hideConfirmation}
-            className="absolute inset-0 z-0 h-full w-full cursor-default"
-            tabIndex={-1}
-          />
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="inquiry-confirmation-title"
-            aria-live="polite"
-            className={`relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-sky-500/40 bg-slate-950/95 p-8 text-slate-100 shadow-2xl shadow-sky-500/40 transition-all duration-300 ease-out ${
-              isConfirmationOpen ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-6 scale-95 opacity-0'
-            }`}
+            ref={confirmationCardRef}
+            role="status"
+            className="pointer-events-auto relative flex w-full max-w-md flex-col items-center gap-5 overflow-hidden rounded-3xl border border-sky-500/40 bg-slate-950/95 p-8 text-slate-100 shadow-2xl shadow-sky-500/40"
           >
             <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-500 via-cyan-400 to-transparent" />
             <button
