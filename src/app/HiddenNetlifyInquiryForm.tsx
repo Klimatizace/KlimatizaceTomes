@@ -7,7 +7,7 @@ export default function HiddenNetlifyInquiryForm() {
       method="POST"
       data-netlify="true"
       netlify-honeypot="bot-field"
-      action="/"
+      action="/thank-you"
       hidden
     >
       <input type="hidden" name="form-name" value="inquiry" />
@@ -22,6 +22,7 @@ export default function HiddenNetlifyInquiryForm() {
       <input type="text" name="contact" />
       <textarea name="message" />
       <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
+      <button type="submit">Send</button>
     </form>
   );
 }

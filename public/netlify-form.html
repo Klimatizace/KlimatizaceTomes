@@ -13,11 +13,10 @@
     method="POST" 
     data-netlify="true" 
     netlify-honeypot="bot-field"
-    action="/"
-    style="display: none;"
+    action="/thank-you"
   >
     <input type="hidden" name="form-name" value="inquiry" />
-    <p>
+    <p style="display: none;">
       <label>
         Don't fill this out if you're human:
         <input name="bot-field" type="text" />
@@ -27,6 +26,7 @@
     <input type="text" name="contact" />
     <textarea name="message"></textarea>
     <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
+    <button type="submit">Send</button>
   </form>
 </body>
 </html>

@@ -349,7 +349,7 @@ export const BaseTemplate = (props: {
 
       // Set the form target to our hidden iframe
       hiddenForm.target = 'netlify-form-submit';
-      hiddenForm.action = '/';
+      hiddenForm.action = '/thank-you';
 
       // Handle the iframe load event (form submission complete)
       iframe.onload = () => {
