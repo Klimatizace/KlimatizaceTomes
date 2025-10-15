@@ -300,7 +300,7 @@ export const BaseTemplate = (props: {
     };
   }, [closeMobileNav, isMobileNavOpen]);
 
-  const handleInquirySubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (isInquirySubmitting) {
@@ -318,68 +318,30 @@ export const BaseTemplate = (props: {
     setConfirmationVariant('pending');
     showConfirmation('pending');
 
-    // Find the hidden Netlify form and populate it with our data
-    const hiddenForm = document.querySelector('form[name="inquiry"]') as HTMLFormElement;
+    try {
+      // Submit directly to Netlify Forms using fetch with proper encoding
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString(),
+      });
 
-    if (hiddenForm) {
-      // Populate the hidden form with our TSX form data
-      const nameInput = hiddenForm.querySelector('input[name="name"]') as HTMLInputElement;
-      const contactInput = hiddenForm.querySelector('input[name="contact"]') as HTMLInputElement;
-      const messageInput = hiddenForm.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
-      const subjectInput = hiddenForm.querySelector('input[name="subject"]') as HTMLInputElement;
-
-      if (nameInput) {
-        nameInput.value = formData.get('name') as string || '';
-      }
-      if (contactInput) {
-        contactInput.value = formData.get('contact') as string || '';
-      }
-      if (messageInput) {
-        messageInput.value = formData.get('message') as string || '';
-      }
-      if (subjectInput) {
-        subjectInput.value = 'Nová poptávka z klimatizacetomes.netlify.app';
-      }
-
-      // Create a hidden iframe to handle the submission
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.name = 'netlify-form-submit';
-      document.body.appendChild(iframe);
-
-      // Set the form target to our hidden iframe
-      hiddenForm.target = 'netlify-form-submit';
-      hiddenForm.action = '/';
-
-      // Handle the iframe load event (form submission complete)
-      iframe.onload = () => {
+      if (response.ok) {
+        setConfirmationVariant('success');
+        // Clear the form
+        form.reset();
+        setPrefillMessage('');
+        // Close modal after a short delay
         setTimeout(() => {
-          setConfirmationVariant('success');
-          // Clear the TSX form
-          form.reset();
-          setPrefillMessage('');
-          // Clean up
-          document.body.removeChild(iframe);
-          // Close modal after a short delay
-          setTimeout(() => {
-            closeInquiry();
-          }, 2000);
-        }, 1000); // Give Netlify a moment to process
-      };
-
-      // Handle errors
-      iframe.onerror = () => {
-        setConfirmationVariant('error');
-        document.body.removeChild(iframe);
-        setInquirySubmitting(false);
-      };
-
-      // Submit the hidden form
-      hiddenForm.submit();
-    } else {
-      // Fallback: show error if hidden form not found
-      console.error('Hidden Netlify form not found');
+          closeInquiry();
+        }, 2000);
+      } else {
+        throw new Error(`Form submission failed: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
       setConfirmationVariant('error');
+    } finally {
       setInquirySubmitting(false);
     }
   };
