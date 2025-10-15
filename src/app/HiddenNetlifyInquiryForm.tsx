@@ -13,6 +13,7 @@ export default function HiddenNetlifyInquiryForm() {
       <input type="text" name="name" />
       <input type="text" name="contact" />
       <textarea name="message" />
+      <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
     </form>
   );
 }
