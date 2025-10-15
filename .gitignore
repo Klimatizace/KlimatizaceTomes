@@ -64,3 +64,6 @@ build-archive.log
 /playwright-report/
 /playwright/.cache/
 .env.development
+
+# Local Netlify folder
+.netlify
