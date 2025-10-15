@@ -327,7 +327,7 @@ export const BaseTemplate = (props: {
     setConfirmationVariant('pending');
     showConfirmation('pending');
 
-    fetch('/', {
+    fetch('/netlify-form-seed.html', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: encode(formData),
