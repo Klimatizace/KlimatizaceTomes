@@ -314,78 +314,38 @@ export const BaseTemplate = (props: {
       formData.set('message', prefillMessage);
     }
 
+    // Ensure Netlify receives the form name in AJAX submissions
+    formData.set('form-name', 'inquiry');
+
+    // Helper to URL-encode FormData for application/x-www-form-urlencoded
+    const encode = (data: FormData) =>
+      Array.from(data.entries())
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+        .join('&');
+
     setInquirySubmitting(true);
     setConfirmationVariant('pending');
     showConfirmation('pending');
 
-    // Find the hidden HTML form that Netlify can detect
-    const hiddenForm = document.getElementById('hidden-netlify-form') as HTMLFormElement;
-
-    if (hiddenForm) {
-      // Populate the hidden form with our TSX form data
-      const nameInput = hiddenForm.querySelector('input[name="name"]') as HTMLInputElement;
-      const contactInput = hiddenForm.querySelector('input[name="contact"]') as HTMLInputElement;
-      const messageInput = hiddenForm.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
-      const subjectInput = hiddenForm.querySelector('input[name="subject"]') as HTMLInputElement;
-
-      if (nameInput) {
-        nameInput.value = formData.get('name') as string || '';
-      }
-      if (contactInput) {
-        contactInput.value = formData.get('contact') as string || '';
-      }
-      if (messageInput) {
-        messageInput.value = formData.get('message') as string || '';
-      }
-      if (subjectInput) {
-        subjectInput.value = 'Nová poptávka z klimatizacetomes.netlify.app';
-      }
-
-      // Create a hidden iframe to submit the form without redirecting
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.name = 'netlify-form-submit';
-      document.body.appendChild(iframe);
-
-      // Set the form target to our hidden iframe
-      hiddenForm.target = 'netlify-form-submit';
-      hiddenForm.action = '/thank-you';
-
-      // Handle the iframe load event (form submission complete)
-      iframe.onload = () => {
-        // Show success
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: encode(formData),
+    })
+      .then(() => {
         setConfirmationVariant('success');
         form.reset();
         setPrefillMessage('');
-
-        // Clean up iframe
-        setTimeout(() => {
-          document.body.removeChild(iframe);
-        }, 1000);
-
-        // Close modal after a delay
         setTimeout(() => {
           closeInquiry();
         }, 2000);
-
-        setInquirySubmitting(false);
-      };
-
-      // Handle errors
-      iframe.onerror = () => {
+      })
+      .catch(() => {
         setConfirmationVariant('error');
-        document.body.removeChild(iframe);
+      })
+      .finally(() => {
         setInquirySubmitting(false);
-      };
-
-      // Submit the hidden form to the iframe
-      hiddenForm.submit();
-    } else {
-      // Fallback error
-      console.error('Hidden form not found');
-      setConfirmationVariant('error');
-      setInquirySubmitting(false);
-    }
+      });
   };
 
   const renderMobileMenuIcon = () => {
