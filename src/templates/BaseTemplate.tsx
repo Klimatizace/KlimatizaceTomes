@@ -319,6 +319,9 @@ export const BaseTemplate = (props: {
     showConfirmation('pending');
 
     try {
+      // Add the form-name field required by Netlify for JavaScript-rendered forms
+      formData.append('form-name', 'inquiry');
+
       // Submit directly to Netlify Forms using fetch with proper encoding
       const response = await fetch('/', {
         method: 'POST',
