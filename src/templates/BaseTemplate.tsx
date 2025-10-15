@@ -300,7 +300,7 @@ export const BaseTemplate = (props: {
     };
   }, [closeMobileNav, isMobileNavOpen]);
 
-  const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleInquirySubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (isInquirySubmitting) {
@@ -318,33 +318,47 @@ export const BaseTemplate = (props: {
     setConfirmationVariant('pending');
     showConfirmation('pending');
 
-    try {
-      // Add the form-name field required by Netlify for JavaScript-rendered forms
-      formData.append('form-name', 'inquiry');
+    // Find the hidden HTML form that Netlify can detect
+    const hiddenForm = document.getElementById('hidden-netlify-form') as HTMLFormElement;
 
-      // Submit directly to Netlify Forms using fetch with proper encoding
-      const response = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString(),
-      });
+    if (hiddenForm) {
+      // Populate the hidden form with our TSX form data
+      const nameInput = hiddenForm.querySelector('input[name="name"]') as HTMLInputElement;
+      const contactInput = hiddenForm.querySelector('input[name="contact"]') as HTMLInputElement;
+      const messageInput = hiddenForm.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+      const subjectInput = hiddenForm.querySelector('input[name="subject"]') as HTMLInputElement;
 
-      if (response.ok) {
+      if (nameInput) {
+        nameInput.value = formData.get('name') as string || '';
+      }
+      if (contactInput) {
+        contactInput.value = formData.get('contact') as string || '';
+      }
+      if (messageInput) {
+        messageInput.value = formData.get('message') as string || '';
+      }
+      if (subjectInput) {
+        subjectInput.value = 'Nová poptávka z klimatizacetomes.netlify.app';
+      }
+
+      // Submit the hidden form directly (this will work because it's a real HTML form)
+      hiddenForm.submit();
+
+      // Show success after a short delay
+      setTimeout(() => {
         setConfirmationVariant('success');
-        // Clear the form
         form.reset();
         setPrefillMessage('');
-        // Close modal after a short delay
         setTimeout(() => {
           closeInquiry();
         }, 2000);
-      } else {
-        throw new Error(`Form submission failed: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Form submission error:', error);
+      }, 1000);
+
+      setInquirySubmitting(false);
+    } else {
+      // Fallback error
+      console.error('Hidden form not found');
       setConfirmationVariant('error');
-    } finally {
       setInquirySubmitting(false);
     }
   };

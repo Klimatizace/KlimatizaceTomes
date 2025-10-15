@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netlify Form Detection</title>
+</head>
+<body>
+  <!-- This form is only for Netlify to detect at build time -->
+  <form 
+    id="hidden-netlify-form"
+    name="inquiry" 
+    method="POST" 
+    data-netlify="true" 
+    netlify-honeypot="bot-field"
+    action="/"
+    style="display: none;"
+  >
+    <input type="hidden" name="form-name" value="inquiry" />
+    <p>
+      <label>
+        Don't fill this out if you're human:
+        <input name="bot-field" type="text" />
+      </label>
+    </p>
+    <input type="text" name="name" />
+    <input type="text" name="contact" />
+    <textarea name="message"></textarea>
+    <input type="hidden" name="subject" value="Nová poptávka z klimatizacetomes.netlify.app" />
+  </form>
+</body>
+</html>
