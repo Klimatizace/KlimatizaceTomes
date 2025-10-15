@@ -341,20 +341,45 @@ export const BaseTemplate = (props: {
         subjectInput.value = 'Nová poptávka z klimatizacetomes.netlify.app';
       }
 
-      // Submit the hidden form directly (this will work because it's a real HTML form)
-      hiddenForm.submit();
+      // Create a hidden iframe to submit the form without redirecting
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.name = 'netlify-form-submit';
+      document.body.appendChild(iframe);
 
-      // Show success after a short delay
-      setTimeout(() => {
+      // Set the form target to our hidden iframe
+      hiddenForm.target = 'netlify-form-submit';
+      hiddenForm.action = '/';
+
+      // Handle the iframe load event (form submission complete)
+      iframe.onload = () => {
+        // Show success
         setConfirmationVariant('success');
         form.reset();
         setPrefillMessage('');
+
+        // Clean up iframe
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+
+        // Close modal after a delay
         setTimeout(() => {
           closeInquiry();
         }, 2000);
-      }, 1000);
 
-      setInquirySubmitting(false);
+        setInquirySubmitting(false);
+      };
+
+      // Handle errors
+      iframe.onerror = () => {
+        setConfirmationVariant('error');
+        document.body.removeChild(iframe);
+        setInquirySubmitting(false);
+      };
+
+      // Submit the hidden form to the iframe
+      hiddenForm.submit();
     } else {
       // Fallback error
       console.error('Hidden form not found');
