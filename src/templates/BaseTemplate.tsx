@@ -10,6 +10,7 @@ import type { FormEvent, ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { COMPANY_INFO } from '@/data/company';
+import { PromoOverlay } from '@/components/PromoOverlay';
 import { AppConfig } from '@/utils/AppConfig';
 import { getStructuredData } from '@/utils/seo';
 
@@ -602,6 +603,8 @@ export const BaseTemplate = (props: {
           <span>{t('made_with')}</span>
         </div>
       </footer>
+
+      <PromoOverlay />
 
       {isInquiryMounted && (
         <div

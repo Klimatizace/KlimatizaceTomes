@@ -110,10 +110,12 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
         {items.map(item => (
           <div
             key={item.id}
+            id={item.id}
             onClick={handleCardClick(item.id)}
             onKeyDown={handleCardKeyDown(item.id)}
             role="button"
             tabIndex={0}
+            aria-labelledby={`${item.id}-title`}
             className="group w-full cursor-pointer overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-slate-950/30 transition duration-200 hover:-translate-y-1 hover:border-sky-500/40 hover:shadow-sky-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
           >
             {item.image && (
@@ -138,7 +140,9 @@ export const PricingGrid = ({ items }: { items: PricingItem[] }) => {
               {/* Fixed-height content block to align buttons across cards */}
               <div className="flex min-h-[10.5rem] flex-col justify-start gap-6 md:min-h-[11.5rem]">
                 <div className="space-y-3 text-slate-200">
-                  <h2 className="line-clamp-2 text-2xl font-semibold text-white">{item.title}</h2>
+                  <h2 id={`${item.id}-title`} className="line-clamp-2 text-2xl font-semibold text-white">
+                    {item.title}
+                  </h2>
                   {item.description && <p className="line-clamp-2 text-sm text-slate-300">{item.description}</p>}
                 </div>
                 <div className="flex items-end gap-3 text-white">

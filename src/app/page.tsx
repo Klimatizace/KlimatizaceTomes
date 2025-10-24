@@ -120,10 +120,10 @@ export default function HomePage() {
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
-              href="/cenik"
+              href="/cenik#gree-cosmo-pro-25"
               className="inline-flex items-center gap-2 rounded-full border border-sky-500/60 bg-sky-500/10 px-5 py-3 text-sm font-semibold text-sky-100 transition hover:bg-sky-500/20"
             >
-              Ukázat ceník
+              Zjistit víc
             </Link>
             <a
               href="#kontakt"

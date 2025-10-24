@@ -5,6 +5,7 @@ export type PricingDetailId = 'aria-ar5-basic'
   | 'vivax-m-design'
   | 'aria-ar5-premium'
   | 'invertor-neo'
+  | 'gree-cosmo-pro-25'
   | 'gree-pular';
 
 export type PricingItem = {
@@ -148,6 +149,31 @@ export const PRICING_DETAILS: Record<PricingDetailId, PricingDetail> = {
       { label: 'Komunikační rozhraní', value: 'RS485 (Modbus)' },
     ],
   },
+  'gree-cosmo-pro-25': {
+    headline: 'Moderní řešení pro komfort v menších až středních prostorech',
+    description:
+      'Cosmo Pro je moderní invertorová split klimatizace navržená pro efektivní chlazení i vytápění menších až středně velkých prostorů. Využívá ekologické chladivo R32, nabízí tichý provoz a komfortní ovládání (včetně Wi-Fi/remote). Díky invertorové technologii se přizpůsobuje aktuální potřebě výkonu a šetří energii.',
+    features: [
+      'Wi-Fi ovládání i chytré režimy pro pohodlnou regulaci',
+      'Tichý chod od 21 dB pro nerušený odpočinek',
+      'Invertorová technologie s úsporným chladivem R32',
+      'Spolehlivé vytápění i v mrazech do −25 °C',
+    ],
+    specs: [
+      { label: 'Chladicí výkon', value: '2 700 W (≈ 2,7 kW)' },
+      { label: 'Topný výkon', value: '3 000 W (≈ 3,0 kW)' },
+      { label: 'Příkon – chlazení / topení', value: '680 W / 680 W' },
+      { label: 'Doporučená plocha', value: 'cca 27 m²' },
+      { label: 'Chladivo', value: 'R32' },
+      { label: 'Provozní rozsah venkovní teploty', value: 'Topný režim: do −25 °C' },
+      { label: 'Energetická účinnost / EER / COP', value: 'EER ~ 3,97 ; COP ~ 4,41' },
+      { label: 'Rozměry vnitřní jednotky', value: '867 × 276 × 206 mm' },
+      {
+        label: 'Hlučnost vnitřní / venkovní jednotky',
+        value: 'Vnitřní: min ~21 dB, max ~39 dB; venkovní ~51 dB',
+      },
+    ],
+  },
   'gree-pular': {
     headline: 'Osvědčená volba s funkcí I-Feel',
     description:
@@ -220,6 +246,15 @@ export const PRICING_ITEMS: PricingItem[] = [
     price: '27 990 Kč',
     description: 'Silnější set s možností upraveného řízení pro speciální prostory.',
     image: '/images/pricing/invertor-neo.webp',
+  },
+  {
+    id: 'gree-cosmo-pro-25',
+    title: 'Gree Cosmo Pro 2,5 kW včetně montáže (záruka 3 roky)',
+    price: '17 690 Kč',
+    badge: 'Novinka',
+    description:
+      'Moderní invertorová jednotka s tichým provozem, Wi-Fi ovládáním a úsporným chodem pro byty a menší kanceláře.',
+    image: '/images/pricing/gree-cosmo-pro.webp',
   },
   {
     id: 'gree-pular',
