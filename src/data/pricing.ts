@@ -135,7 +135,7 @@ export const PRICING_DETAILS: Record<PricingDetailId, PricingDetail> = {
   'invertor-neo': {
     headline: 'Výkonná klimatizace pro speciální aplikace',
     description:
-      'Invertor NEO je robustní split systém, který díky posílenému kompresoru a flexibilní regulaci výkonu zvládne i náročnější provozy, například vinné sklepy, technické místnosti nebo menší serverovny.',
+      'Invertor NEO je robustní split systém připravený zvládnout i zátěžové provozy. Posílený kompresor, přesná regulace výkonu a rozšířená ochrana komponent dovolí bezpečný provoz ve sklepích, serverovnách nebo technologických místnostech.',
     features: [
       'Rozšířený rozsah pracovních teplot od -20 °C do +50 °C',
       'Možnost napojení na externí řízení či BMS systém',
@@ -244,8 +244,9 @@ export const PRICING_ITEMS: PricingItem[] = [
     id: 'invertor-neo',
     title: 'Invertor NEO včetně montáže (záruka 5 let)',
     price: '27 990 Kč',
-    description: 'Silnější set s možností upraveného řízení pro speciální prostory.',
-    image: '/images/pricing/invertor-neo.webp',
+    description:
+      'Výkonná sestava s prodlouženou zárukou a flexibilním řízením pro sklepy, technické místnosti nebo serverovny.',
+    image: '/images/pricing/invertor-neo.svg',
   },
   {
     id: 'gree-cosmo-pro-25',
