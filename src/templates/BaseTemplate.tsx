@@ -529,7 +529,10 @@ export const BaseTemplate = (props: {
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
             <div className="flex items-center justify-between gap-4 md:w-full md:gap-6">
               <Link href="/" className="flex shrink-0 items-center gap-4 text-left transition-transform hover:scale-[1.02]">
-                <span className="relative h-14 w-14 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-3 shadow-lg shadow-sky-900/20 md:h-16 md:w-16">
+                <span
+                  className="relative h-14 w-14 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-3 shadow-lg shadow-sky-900/20 md:h-16 md:w-16 bg-center bg-cover"
+                  style={{ backgroundImage: 'url(/images/logo-bg.png)' }}
+                >
                   <Image
                     src="/images/logo-mark.svg"
                     alt={AppConfig.name}

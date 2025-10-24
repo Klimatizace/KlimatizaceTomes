@@ -89,7 +89,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="cenik" className="bg-slate-950 py-16">
+      {/* Speciální nabídka – banner nad nejčastěji poptávanými sety */}
+      <section id="special-offer" className="bg-slate-950 py-8">
+        <div className="mx-auto max-w-6xl px-6">
+          <Link href="/cenik#gree-cosmo-pro-25" className="group block overflow-hidden rounded-3xl border border-slate-800 shadow-lg shadow-slate-950/30">
+            <div className="relative aspect-[1152/768] w-full bg-slate-900">
+              <Image
+                src="/images/special-offer-gree-cosmo-pro.png"
+                alt="Speciální nabídka: GREE Cosmo PRO 2,5 kW – posezónní sleva"
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.01]"
+                sizes="100vw"
+                priority
+              />
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      <section id="cenik" className="bg-slate-950 pt-24 pb-16">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 flex flex-col items-center gap-4 text-center">
             <span className="text-xs font-semibold tracking-[0.4em] text-sky-300 uppercase">Ceník</span>
