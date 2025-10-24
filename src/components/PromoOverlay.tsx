@@ -117,7 +117,7 @@ export const PromoOverlay = () => {
       >
         <div className="relative h-[420px] w-full bg-slate-900 sm:h-[480px]">
           <Image
-            src="/images/gree.webp"
+            src="/images/pricing/gree-cosmo-pro.jpg"
             alt="Promo akce s novou klimatizací Gree Cosmo Pro"
             fill
             priority
