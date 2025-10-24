@@ -25,7 +25,7 @@ export default function HomePage() {
     <BaseTemplate leftNav={buildNavLinks()}>
       <section id="uvod" className="relative isolate scroll-mt-28 overflow-hidden md:scroll-mt-36">
         <Image
-          src="/images/hero-background.webp"
+          src="/images/background-1.png"
           alt="Úvodní obrázek"
           fill
           priority
