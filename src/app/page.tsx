@@ -25,8 +25,8 @@ export default function HomePage() {
     <BaseTemplate leftNav={buildNavLinks()}>
       <section id="uvod" className="relative isolate scroll-mt-28 overflow-hidden md:scroll-mt-36">
         <Image
-          src="/images/hero-locale.jpg"
-          alt="Instalovaná klimatizace v moderním interiéru"
+          src="/images/promo.webp"
+          alt="Sezónní sleva na klimatizaci Gree Cosmo Pro"
           fill
           priority
           className="absolute inset-0 h-full w-full object-cover"
