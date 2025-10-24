@@ -25,8 +25,8 @@ export default function HomePage() {
     <BaseTemplate leftNav={buildNavLinks()}>
       <section id="uvod" className="relative isolate scroll-mt-28 overflow-hidden md:scroll-mt-36">
         <Image
-          src="/images/arctic-fox.webp"
-          alt="Polární liška - úvodní obrázek"
+          src="/images/hero-background.webp"
+          alt="Úvodní obrázek"
           fill
           priority
           className="absolute inset-0 h-full w-full object-cover"
