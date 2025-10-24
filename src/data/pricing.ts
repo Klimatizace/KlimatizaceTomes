@@ -246,7 +246,7 @@ export const PRICING_ITEMS: PricingItem[] = [
     price: '27 990 Kč',
     description:
       'Výkonná sestava s prodlouženou zárukou a flexibilním řízením pro sklepy, technické místnosti nebo serverovny.',
-    image: '/images/pricing/invertor-neo.svg',
+    image: '/images/pricing/invertor-neo.webp',
   },
   {
     id: 'gree-cosmo-pro-25',
@@ -254,8 +254,8 @@ export const PRICING_ITEMS: PricingItem[] = [
     price: '17 690 Kč',
     badge: 'Novinka',
     description:
-      'Moderní invertorová jednotka s tichým provozem, Wi-Fi ovládáním a úsporným chodem pro byty a menší kanceláře.',
-    image: '/images/pricing/gree-cosmo-pro.webp',
+      'Moderní invertorová jednotka s tichým provozem, Wi-Fi ovládáním a úsporným chodem pro byty i kompaktní kanceláře.',
+    image: '/images/pricing/gree-cosmo-pro.jpg',
   },
   {
     id: 'gree-pular',
