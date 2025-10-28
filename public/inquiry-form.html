@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Netlify Testovací formulář</title>
+  <style>
+    body { font-family: sans-serif; background: #181e24; color: #fff; }
+    .container { max-width: 420px; margin: 4rem auto; background: #232b36; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 16px #0002; }
+    label { display: block; margin-bottom: 0.5rem; }
+    input, textarea { width: 100%; margin-bottom: 1rem; border-radius: 6px; border: 1px solid #444; padding: 0.5rem; background: #181e24; color: #fff; }
+    button { background: #0ea5e9; color: #fff; border: none; border-radius: 6px; padding: 0.75rem 1.5rem; font-weight: bold; cursor: pointer; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Netlify Test Form</h1>
+    <form name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="inquiry" />
+      <p class="hidden">
+        <label>Don’t fill this out if you’re human: <input name="bot-field" type="text" /></label>
+      </p>
+      <label>Jméno
+        <input name="name" type="text" required />
+      </label>
+      <label>Kontakt
+        <input name="contact" type="text" required />
+      </label>
+      <label>Zpráva
+        <textarea name="message" rows="4" required></textarea>
+      </label>
+      <button type="submit">Odeslat</button>
+    </form>
+  </div>
+  <script src="/inquiry-bridge.js"></script>
+</body>
+</html>
