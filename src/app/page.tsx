@@ -31,7 +31,7 @@ export default function HomePage() {
           aria-hidden
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url(/images/background-1.png)',
+            backgroundImage: 'url(/images/background-1.jpg)',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
